@@ -1,0 +1,25 @@
+--cpu Cortex-M0
+".\objects\system_m051series.o"
+".\objects\startup_m051series.o"
+".\objects\uart_printf.o"
+".\objects\main.o"
+".\objects\systime.o"
+".\objects\mygpio.o"
+".\objects\mepwm.o"
+".\objects\protocol.o"
+".\objects\interrupt.o"
+".\objects\sysinit.o"
+".\objects\dataflash.o"
+".\objects\smartservo.o"
+".\objects\retarget.o"
+".\objects\sys.o"
+".\objects\uart.o"
+".\objects\i2c.o"
+".\objects\timer.o"
+".\objects\clk.o"
+".\objects\gpio.o"
+".\objects\fmc.o"
+".\objects\pwm.o"
+--library_type=microlib --ro-base 0x00000000 --entry 0x00000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\Neuron.map" -o .\Objects\Neuron.axf

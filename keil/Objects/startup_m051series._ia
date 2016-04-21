@@ -1,0 +1,6 @@
+--cpu Cortex-M0 -g --apcs=interwork --pd "__MICROLIB SETA 1"
+-I "E:\2016\Neuron_servo 0326\Neuron_servo\keil\RTE"
+-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.4\Device\M051\Include
+-I D:\Keil_v5\ARM\CMSIS\Include
+--pd "__UVISION_VERSION SETA 513"
+--list .\listings\startup_m051series.lst --xref -o .\objects\startup_m051series.o --depend .\objects\startup_m051series.d "startup_M051Series.s"

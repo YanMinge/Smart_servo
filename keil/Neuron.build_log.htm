@@ -1,0 +1,48 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.13.0.0
+Copyright (C) 2014 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Yan Microsoft, Microsoft, LIC=SDAPC-7A2WM-DKIBN-Y628X-E1BVG-B6P7H
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Standard  Version: 5.13.0.0
+Toolchain Path:  D:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.05 update 1 (build 106)
+Assembler:       Armasm.exe V5.05 update 1 (build 106)
+Linker/Locator:  ArmLink.exe V5.05 update 1 (build 106)
+Library Manager: ArmAr.exe V5.05 update 1 (build 106)
+Hex Converter:   FromElf.exe V5.05 update 1 (build 106)
+CPU DLL:         SARMCM3.DLL V5.13.0.0
+Dialog DLL:      DARMCM1.DLL V1.12.0.0
+Target DLL:      Nu_Link.dll V1.28
+Dialog DLL:      TARMCM1.DLL V1.9.0.0
+ 
+<h2>Project:</h2>
+E:\makeblock\Neuron\keil\Neuron.uvproj
+Project File Date:  05/19/2015
+
+<h2>Output:</h2>
+Rebuild target 'Target 1'
+assembling startup_M051Series.s...
+compiling main.c...
+linking...
+.\Objects\Neuron.axf: Error: L6218E: Undefined symbol SystemInit (referred from startup_m051series.o).
+.\Objects\Neuron.axf: Error: L6218E: Undefined symbol CLK_EnableModuleClock (referred from main.o).
+.\Objects\Neuron.axf: Error: L6218E: Undefined symbol CLK_EnableXtalRC (referred from main.o).
+.\Objects\Neuron.axf: Error: L6218E: Undefined symbol CLK_SetCoreClock (referred from main.o).
+.\Objects\Neuron.axf: Error: L6218E: Undefined symbol CLK_SetHCLK (referred from main.o).
+.\Objects\Neuron.axf: Error: L6218E: Undefined symbol CLK_SetModuleClock (referred from main.o).
+.\Objects\Neuron.axf: Error: L6218E: Undefined symbol CLK_WaitClockReady (referred from main.o).
+.\Objects\Neuron.axf: Error: L6218E: Undefined symbol SYS_ResetModule (referred from main.o).
+.\Objects\Neuron.axf: Error: L6218E: Undefined symbol SystemCoreClock (referred from main.o).
+.\Objects\Neuron.axf: Error: L6218E: Undefined symbol UART_Open (referred from main.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 10 error messages.
+".\Objects\Neuron.axf" - 10 Error(s), 0 Warning(s).
+Target not created.
+</pre>
+</body>
+</html>
