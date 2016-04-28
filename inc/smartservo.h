@@ -13,8 +13,8 @@ typedef enum
 
 //GPIO define
 #define SMART_SERVO_LED_B     P2_4     //P2.4
-#define SMART_SERVO_LED_R     P2_5     //P2.5
-#define SMART_SERVO_LED_G     P2_6
+#define SMART_SERVO_LED_R     P2_6     //P2.5
+#define SMART_SERVO_LED_G     P2_5
 
 #define SMART_SERVO_SLEEP     P3_6
 #define SMART_SERVO_PW1       P2_2

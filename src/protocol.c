@@ -642,9 +642,10 @@ void SendErrorUart0(uint8_t errorcode)
   {
     write_byte_uart0(START_SYSEX);
     write_byte_uart0(device_id);
+    write_byte_uart0(SMART_SERVO);
     write_byte_uart0(CTL_ERROR_CODE);
     write_byte_uart0(errorcode);
-    checksum = (device_id + CTL_ERROR_CODE + errorcode) & 0x7f;
+    checksum = (device_id + CTL_ERROR_CODE + SMART_SERVO + errorcode) & 0x7f;
     write_byte_uart0(checksum);
     write_byte_uart0(END_SYSEX);
   }

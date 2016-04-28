@@ -488,7 +488,7 @@ void motor_protection(void)
   current = calculate_current(current);
   voltage = calculate_voltage(voltage);
 
-  if(temp > 50)
+  if(temp > 65)
   {
     temp_match_max_count ++;
   }
@@ -499,13 +499,20 @@ void motor_protection(void)
     return;
   }
 	
-  if(io_get_nfault_value() == 0)
+//  if(io_get_nfault_value() == 0)
+//  {
+//    smart_servo_break(0);
+//    digitalWrite(SMART_SERVO_SLEEP,0);
+//    uart_printf(UART0,"nfault:%d\r\n",io_get_nfault_value());
+//    protect_flag = 1;
+//  }
+	
+  if((voltage < 5.5) || (voltage > 9))
   {
     smart_servo_break(0);
     digitalWrite(SMART_SERVO_SLEEP,0);
-//    uart_printf(UART0,"nfault:%d\r\n",io_get_nfault_value());
     protect_flag = 1;
-  }
+	}
 
   if(temp_debounced_count == (6000/SAMPLING_INTERVAL_TIME))
   {
