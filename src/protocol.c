@@ -546,6 +546,9 @@ static void smart_servo_cmd_process(void *arg)
       led_r = readbyte(sysex.val.value,1);
       led_g = readbyte(sysex.val.value,3);
       led_b = readbyte(sysex.val.value,5);
+	  smart_led.R = led_r;
+	  smart_led.G = led_g;
+	  smart_led.B = led_b;
       smart_servo_led(led_r,led_g,led_b);
       SendErrorUart0(PROCESS_SUC);
       break;
@@ -636,7 +639,7 @@ void SendErrorUart0(uint8_t errorcode)
   uint8_t checksum;
   if(command_mode == G_CODE_MODE)
   {
-    uart0_printf("G%d R%d\r\n",device_id,errorcode);
+    uart0_printf("G%d T%d E%d\r\n",device_id,SMART_SERVO,errorcode);
   }
   else
   {
@@ -1010,12 +1013,22 @@ void device_neep_loop_in_sampling(void)
 
   if(device_type == SMART_SERVO)
   {
-//    if((smart_servo_target_pos != smart_servo_cur_pos) && 
-//       (smart_servo_target_pos != -1))
-//    {
-//      speed = pid_position_to_pwm();
-//      smart_servo_speed_update(speed);
-//    }
+    smart_servo_cur_pos = adc_get_position_value();
+
+    if((protect_flag != true) &&
+       (shake_hand_flag != true))
+    {
+      if((smart_servo_cur_pos > SMART_SERVO_MAX_LIM_POS) ||
+         (smart_servo_cur_pos < SMART_SERVO_MIN_LIM_POS))
+      {
+        smart_led_blink(500,0,0,255);
+        return;
+      }
+      else
+      {
+        smart_servo_led(smart_led.R,smart_led.G,smart_led.B);
+      }
+    }
     speed = pid_position_to_pwm();
     smart_servo_speed_update(speed);
   }
@@ -1156,6 +1169,9 @@ static void cmd_set_rgb_led(char *cmd)
       b_value = atof(str+1);
     }
   }
+  smart_led.R = r_value;
+  smart_led.G = g_value;
+  smart_led.B = b_value;
   smart_servo_led(r_value,g_value,b_value);
   uart0_printf("G%d M4 R%d, G%d, B%d\r\n",device_id,r_value,g_value,b_value);
 }
@@ -1177,7 +1193,7 @@ static void cmd_get_servo_temperature(char *cmd)
 
 static void cmd_get_servo_current(char *cmd)
 {
-  uart0_printf("G%d M8 C%.2f\r\n",device_id,calculate_current(smart_servo_current_val));
+  uart0_printf("G%d M8 I%.2f\r\n",device_id,calculate_current(smart_servo_current_val));
 }
 
 static void cmd_get_servo_voltage(char *cmd)

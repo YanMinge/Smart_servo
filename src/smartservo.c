@@ -6,9 +6,13 @@
 #define FILTER_SHIFT 3
 
 PID  PID_pos, PID_speed, PID_speed_lock;
+smart_led_type smart_led = {0,0,255};
 
 volatile boolean pos_lock_flag = false;
 volatile boolean dir_lock_flag = false;
+volatile boolean protect_flag = false;
+volatile boolean blink_flag = false;
+
 volatile int16_t pre_pos = 0;
 volatile int16_t smart_servo_cur_pos = 0;
 int16_t smart_servo_pre_pos = 0;
@@ -30,9 +34,7 @@ volatile uint16_t cur_match_min_count = 0;
 volatile uint16_t temp_debounced_count = 0;
 volatile uint16_t temp_match_max_count = 0;
 volatile uint16_t temp_match_min_count = 0;
-volatile uint16_t blink_flag = 0;
 volatile uint16_t blink_count = 0;
-volatile uint16_t protect_flag = 0;
 volatile unsigned long pre_blink_time = 0;
 
 static void smart_servo_ccw(uint8_t speed);
@@ -53,9 +55,7 @@ void samrt_servo_init(void)
   pwm_init(SMART_SERVO_PW1,20000);  //20000
   pwm_init(SMART_SERVO_PW2,20000);
 
-  pwm_write(SMART_SERVO_LED_R,255,0,255);
-  pwm_write(SMART_SERVO_LED_G,255,0,255);
-  pwm_write(SMART_SERVO_LED_B,0,0,255);
+  smart_servo_led(0,0,255);
 
   smart_servo_cur_pos = adc_get_position_value();
   smart_servo_pre_pos = smart_servo_cur_pos;
@@ -63,7 +63,7 @@ void samrt_servo_init(void)
   filter_pos = smart_servo_cur_pos;
   smart_servo_target_speed = SMART_SERVO_PER_SPPED_MAX;
 
-  protect_flag = 0;
+  protect_flag = false;
 
   PID_pos.P = 2.0;  //1.3
   PID_pos.I = 0.6;
@@ -83,7 +83,7 @@ void samrt_servo_init(void)
   PID_speed_lock.Setpoint = 0;
   PID_speed_lock.Integral = 0;
 
-  smart_servo_break(0);
+  smart_servo_break(true);
 }
 
 void smart_servo_led(uint8_t led_r,uint8_t led_g,uint8_t led_b)
@@ -116,18 +116,18 @@ void smart_led_blink(uint16_t blink_time,uint8_t led_r,uint8_t led_g,uint8_t led
 {
   if(millis() - pre_blink_time > blink_time)
   {
-    if(blink_flag == 0)
+    if(blink_flag == false)
     {
-      blink_flag = 1;
+      blink_flag = true;
     }
     else
     {
-      blink_flag = 0;
+      blink_flag = false;
     }
 	blink_count++;
     pre_blink_time = millis();
   }
-  if(blink_flag == 1)
+  if(blink_flag == true)
   {
     smart_servo_led(led_r,led_g,led_b);
   }
@@ -137,9 +137,9 @@ void smart_led_blink(uint16_t blink_time,uint8_t led_r,uint8_t led_g,uint8_t led
   }
 }
 
-void smart_servo_break(uint8_t status)
+void smart_servo_break(boolean status)
 {
-  if(status == 0)
+  if(status == true)
   {
 //    pwm_write(SMART_SERVO_PW1,0,0,255);
 //    pwm_write(SMART_SERVO_PW2,0,0,255);
@@ -173,15 +173,8 @@ static void smart_servo_cw(uint8_t speed)
 void smart_servo_speed_update(int16_t pwm)
 {
   int16_t speed_temp = pwm;
-  smart_servo_cur_pos = adc_get_position_value();
-
-  if((smart_servo_cur_pos > SMART_SERVO_MAX_LIM_POS) ||
-     (smart_servo_cur_pos < SMART_SERVO_MIN_LIM_POS))
-  {
-    smart_led_blink(500,0,0,255);
-    return;
-  }
-  else if(smart_servo_target_pos == -1)
+ 
+  if(smart_servo_target_pos == -1)
   {
     return;
   }
@@ -433,13 +426,6 @@ void servo_move_test(float speed)
 {
   digitalWrite(SMART_SERVO_SLEEP,1);
   smart_servo_ccw(speed);
-//  delay(1000);
-//	smart_servo_break(1);
-//	delay(2000);
-//  smart_servo_cw(255);
-//  delay(1000);
-//	smart_servo_break(1);
-//	delay(2000);
 }
 
 float calculate_temp(int16_t In_temp)
@@ -488,12 +474,26 @@ void motor_protection(void)
   current = calculate_current(current);
   voltage = calculate_voltage(voltage);
 
+  //If the temperature is above 65 degrees
   if(temp > 65)
   {
     temp_match_max_count ++;
   }
 
-  if(protect_flag == 1)
+  if(temp_debounced_count == (6000/SAMPLING_INTERVAL_TIME))
+  {
+    temp_debounced_count = 0;
+    if(temp_match_max_count > (3000/SAMPLING_INTERVAL_TIME))
+    {
+      smart_servo_break(true);
+      digitalWrite(SMART_SERVO_SLEEP,0);
+//      uart_printf(UART0,"temp:%d\r\n",temp_match_max_count);
+      protect_flag = true;
+    }
+    temp_match_max_count = 0;
+  }
+
+  if(protect_flag == true)
   {
     smart_led_blink(500,255,0,0);
     return;
@@ -501,32 +501,21 @@ void motor_protection(void)
 	
 //  if(io_get_nfault_value() == 0)
 //  {
-//    smart_servo_break(0);
+//    smart_servo_break(true);
 //    digitalWrite(SMART_SERVO_SLEEP,0);
 //    uart_printf(UART0,"nfault:%d\r\n",io_get_nfault_value());
-//    protect_flag = 1;
+//    protect_flag = true;
 //  }
-	
+
+  //Whether the voltage is lower than 5.5V or greater than 9V
   if((voltage < 5.5) || (voltage > 9))
   {
-    smart_servo_break(0);
+    smart_servo_break(true);
     digitalWrite(SMART_SERVO_SLEEP,0);
-    protect_flag = 1;
-	}
-
-  if(temp_debounced_count == (6000/SAMPLING_INTERVAL_TIME))
-  {
-    temp_debounced_count = 0;
-    if(temp_match_max_count > (3000/SAMPLING_INTERVAL_TIME))
-    {
-      smart_servo_break(0);
-      digitalWrite(SMART_SERVO_SLEEP,0);
-//      uart_printf(UART0,"temp:%d\r\n",temp_match_max_count);
-      protect_flag = 1;
-    }
-    temp_match_max_count = 0;
+    protect_flag = true;
   }
 
+  //If current is greater than 1.5A
   if(current > 1500)
   {
     cur_match_max_count ++;
@@ -537,10 +526,9 @@ void motor_protection(void)
     cur_debounced_count = 0;
     if(cur_match_max_count > (3000/SAMPLING_INTERVAL_TIME))
     {
-      smart_servo_break(0);
+      smart_servo_break(true);
       digitalWrite(SMART_SERVO_SLEEP,0);
-//      uart_printf(UART0,"cur:%d\r\n",cur_match_max_count);
-      protect_flag = 1;
+      protect_flag = true;
     }
     cur_match_max_count = 0;
   }

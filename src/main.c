@@ -97,7 +97,7 @@ int main(void)
 //    }
   init_local_device(0x11);
   samrt_servo_init();
-//  digitalWrite(SMART_SERVO_SLEEP,1);
+
   device_id = 0;
   device_type = SMART_SERVO;
   while(1)

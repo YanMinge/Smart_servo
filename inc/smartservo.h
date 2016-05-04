@@ -12,17 +12,17 @@ typedef enum
 } smart_servo_dir;
 
 //GPIO define
-#define SMART_SERVO_LED_B     P2_4     //P2.4
-#define SMART_SERVO_LED_R     P2_6     //P2.5
+#define SMART_SERVO_LED_B     P2_4
+#define SMART_SERVO_LED_R     P2_6
 #define SMART_SERVO_LED_G     P2_5
 
 #define SMART_SERVO_SLEEP     P3_6
 #define SMART_SERVO_PW1       P2_2
 #define SMART_SERVO_PW2       P2_3
-#define SMART_SERVO_DIR_AD    P1_0     //P1.4
+#define SMART_SERVO_DIR_AD    P1_0
 #define SMART_SERVO_TEMP_AD   P1_3
 #define SMART_SERVO_VOL_AD    P1_5
-#define SMART_SERVO_CURR_AD   P1_4     //P1.0
+#define SMART_SERVO_CURR_AD   P1_4
 #define SMART_SERVO_NFAULT    P0_4
 
 #define SAMPLING_INTERVAL_TIME    10
@@ -47,7 +47,14 @@ typedef struct
   float Setpoint, Output, Integral, differential, last_error;
 } PID;
 
+typedef struct
+{
+  uint8_t R, G, B;
+} smart_led_type;
+
 extern volatile boolean pos_lock_flag;
+extern volatile boolean protect_flag;
+
 extern int16_t smart_servo_pre_pos;
 extern volatile int16_t pre_pos;
 extern volatile int16_t smart_servo_cur_pos;
@@ -56,13 +63,14 @@ extern int16_t smart_servo_pre_target_pos;
 extern float smart_servo_target_speed;
 extern int16_t smart_servo_output;
 extern volatile uint16_t blink_count;
+extern smart_led_type smart_led;
 
 extern void samrt_servo_init(void);
 extern long smart_servo_distance_togo(void);
 extern void smart_servo_led(uint8_t led_r,uint8_t led_g,uint8_t led_b);
 extern void smart_led_change(uint8_t led_color);
 extern void smart_led_blink(uint16_t blink_time,uint8_t led_r,uint8_t led_g,uint8_t led_b);
-extern void smart_servo_break(uint8_t status);
+extern void smart_servo_break(boolean status);
 extern int16_t adc_get_position_value(void);
 extern int16_t adc_get_temperature_value(void);
 extern int16_t adc_get_voltage_value(void);
