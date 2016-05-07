@@ -78,6 +78,7 @@
   #define CLR_SERVO_MOTION_COMPENSATION          0x15
   #define SET_SERVO_BREAK                        0x16
   #define SET_SERVO_RGB_LED                      0x17
+  #define SERVO_SHARKE_HAND                      0x18
 
   #define GET_SERVO_STATUS                       0x20
   #define GET_SERVO_PID                          0x21

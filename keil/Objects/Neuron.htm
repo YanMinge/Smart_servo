@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Neuron.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Neuron.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Wed May 04 10:20:04 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Sat May 07 16:32:01 2016
 <BR><P>
 <H3>Maximum Stack Usage =        376 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -350,6 +350,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_epilogue
 </UL>
 <BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_speed
+<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_speed
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;filter_position
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;smart_servo_move_to
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_position_to_pwm
@@ -367,6 +368,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_round
 </UL>
 <BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_speed
+<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_speed
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;smart_servo_move_to
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_position_to_pwm
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;calculate_temp
@@ -384,6 +386,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_float_epilogue
 </UL>
 <BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_speed
+<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_speed
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;samrt_servo_init
 <LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;motor_protection
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;smart_servo_move_to
@@ -437,6 +440,7 @@ Global Symbols
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_relative_pos
 <LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_voltage
 <LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_temperature
+<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_speed
 <LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_current
 <LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_absolute_pos
 <LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;motor_protection
@@ -461,6 +465,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_speed
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_relative_pos
+<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_speed
 <LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_absolute_pos
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;filter_position
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;smart_servo_move_to
@@ -1065,7 +1070,8 @@ Global Symbols
 <LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_current
+<BR>[Called By]<UL><LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_current
+<LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_current
 <LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;motor_protection
 </UL>
 
@@ -1082,7 +1088,8 @@ Global Symbols
 <LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 <LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log
 </UL>
-<BR>[Called By]<UL><LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_temperature
+<BR>[Called By]<UL><LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_temp
+<LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_temperature
 <LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;motor_protection
 </UL>
 
@@ -1093,7 +1100,8 @@ Global Symbols
 <LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 </UL>
-<BR>[Called By]<UL><LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_voltage
+<BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_voltage
+<LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cmd_get_servo_voltage
 <LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;motor_protection
 </UL>
 
@@ -1205,7 +1213,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1c]"></a>main</STRONG> (Thumb, 278 bytes, Stack size 16 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 328<LI>Call Chain = main &rArr; motor_protection &rArr; calculate_temp &rArr; log &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
+<BR><BR>[Stack]<UL><LI>Max Depth = 328<LI>Call Chain = main &rArr; send_sensor_report &rArr; send_smart_temp &rArr; calculate_temp &rArr; log &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;smart_led_blink
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_sensor_report
@@ -1400,7 +1408,10 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;write_byte_uart0
 </UL>
-<BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_speed
+<BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_voltage
+<LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_temp
+<LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_speed
+<LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_current
 </UL>
 
 <P><STRONG><a name="[dd]"></a>sendShort</STRONG> (Thumb, 108 bytes, Stack size 16 bytes, protocol.o(i.sendShort))
@@ -1408,14 +1419,11 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;write_byte_uart0
 </UL>
-<BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_voltage
-<LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_temp
-<LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_pos
-<LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_current
+<BR>[Called By]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_pos
 </UL>
 
 <P><STRONG><a name="[cd]"></a>send_sensor_report</STRONG> (Thumb, 470 bytes, Stack size 8 bytes, protocol.o(i.send_sensor_report))
-<BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = send_sensor_report &rArr; send_smart_speed &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
+<BR><BR>[Stack]<UL><LI>Max Depth = 312<LI>Call Chain = send_sensor_report &rArr; send_smart_temp &rArr; calculate_temp &rArr; log &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_voltage
 <LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_temp
@@ -1646,10 +1654,15 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_mcode
 </UL>
 
-<P><STRONG><a name="[af]"></a>cmd_get_servo_speed</STRONG> (Thumb, 22 bytes, Stack size 8 bytes, protocol.o(i.cmd_get_servo_speed))
-<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = cmd_get_servo_speed &rArr; uart0_printf &rArr; __c89vsprintf
+<P><STRONG><a name="[af]"></a>cmd_get_servo_speed</STRONG> (Thumb, 90 bytes, Stack size 40 bytes, protocol.o(i.cmd_get_servo_speed))
+<BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = cmd_get_servo_speed &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
-<BR>[Calls]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart0_printf
+<BR>[Calls]<UL><LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
+<LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
+<LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
+<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
+<LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart0_printf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_mcode
 </UL>
@@ -1795,11 +1808,12 @@ Local Symbols
 <P><STRONG><a name="[32]"></a>segment_dis_response</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, protocol.o(i.segment_dis_response))
 <BR>[Address Reference Count : 1]<UL><LI> protocol.o(.constdata)
 </UL>
-<P><STRONG><a name="[e2]"></a>send_smart_current</STRONG> (Thumb, 68 bytes, Stack size 12 bytes, protocol.o(i.send_smart_current))
-<BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = send_smart_current &rArr; sendShort
+<P><STRONG><a name="[e2]"></a>send_smart_current</STRONG> (Thumb, 74 bytes, Stack size 16 bytes, protocol.o(i.send_smart_current))
+<BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = send_smart_current &rArr; calculate_current &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
-<BR>[Calls]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;write_byte_uart0
-<LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sendShort
+<BR>[Calls]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;calculate_current
+<LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;write_byte_uart0
+<LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sendFloat
 </UL>
 <BR>[Called By]<UL><LI><a href="#[3e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;smart_servo_cmd_process
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_sensor_report
@@ -1830,21 +1844,23 @@ Local Symbols
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_sensor_report
 </UL>
 
-<P><STRONG><a name="[df]"></a>send_smart_temp</STRONG> (Thumb, 68 bytes, Stack size 12 bytes, protocol.o(i.send_smart_temp))
-<BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = send_smart_temp &rArr; sendShort
+<P><STRONG><a name="[df]"></a>send_smart_temp</STRONG> (Thumb, 74 bytes, Stack size 16 bytes, protocol.o(i.send_smart_temp))
+<BR><BR>[Stack]<UL><LI>Max Depth = 304<LI>Call Chain = send_smart_temp &rArr; calculate_temp &rArr; log &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
-<BR>[Calls]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;write_byte_uart0
-<LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sendShort
+<BR>[Calls]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;calculate_temp
+<LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;write_byte_uart0
+<LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sendFloat
 </UL>
 <BR>[Called By]<UL><LI><a href="#[3e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;smart_servo_cmd_process
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_sensor_report
 </UL>
 
-<P><STRONG><a name="[e1]"></a>send_smart_voltage</STRONG> (Thumb, 68 bytes, Stack size 12 bytes, protocol.o(i.send_smart_voltage))
-<BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = send_smart_voltage &rArr; sendShort
+<P><STRONG><a name="[e1]"></a>send_smart_voltage</STRONG> (Thumb, 74 bytes, Stack size 16 bytes, protocol.o(i.send_smart_voltage))
+<BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = send_smart_voltage &rArr; calculate_voltage &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
-<BR>[Calls]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;write_byte_uart0
-<LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sendShort
+<BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;calculate_voltage
+<LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;write_byte_uart0
+<LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sendFloat
 </UL>
 <BR>[Called By]<UL><LI><a href="#[3e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;smart_servo_cmd_process
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_sensor_report
@@ -1871,8 +1887,8 @@ Local Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> protocol.o(.constdata)
 </UL>
-<P><STRONG><a name="[3e]"></a>smart_servo_cmd_process</STRONG> (Thumb, 426 bytes, Stack size 32 bytes, protocol.o(i.smart_servo_cmd_process))
-<BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = smart_servo_cmd_process &rArr; smart_servo_move &rArr; smart_servo_move_to &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
+<P><STRONG><a name="[3e]"></a>smart_servo_cmd_process</STRONG> (Thumb, 446 bytes, Stack size 32 bytes, protocol.o(i.smart_servo_cmd_process))
+<BR><BR>[Stack]<UL><LI>Max Depth = 336<LI>Call Chain = smart_servo_cmd_process &rArr; send_smart_temp &rArr; calculate_temp &rArr; log &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_voltage
 <LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_smart_temp

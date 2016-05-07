@@ -429,13 +429,15 @@ static void send_smart_pos(short pos_value)
 static void send_smart_temp(short temp_value)
 {
   uint8_t checksum;
+  float tmp_temp;
   //response mesaage to UART0
   write_byte_uart0(START_SYSEX);
   write_byte_uart0(device_id);
   write_byte_uart0(SMART_SERVO);
   write_byte_uart0(GET_SERVO_TEMPERATURE);
   checksum = (device_id + SMART_SERVO + GET_SERVO_TEMPERATURE);
-  checksum += sendShort(temp_value,false);
+  tmp_temp = calculate_temp(temp_value);
+  checksum += sendFloat(tmp_temp);
   checksum = checksum & 0x7f;
   write_byte_uart0(checksum);
   write_byte_uart0(END_SYSEX);
@@ -463,13 +465,15 @@ static void send_smart_speed(int16_t speed_value)
 static void send_smart_voltage(int16_t vol_value)
 {
   uint8_t checksum;
+  float vol_temp;
   //response mesaage to UART0
   write_byte_uart0(START_SYSEX);
   write_byte_uart0(device_id);
   write_byte_uart0(SMART_SERVO);
   write_byte_uart0(GET_SERVO_VOLTAGE);
   checksum = (device_id + SMART_SERVO + GET_SERVO_VOLTAGE);
-  checksum += sendShort(vol_value,false);
+  vol_temp = calculate_voltage(vol_value);
+  checksum += sendFloat(vol_temp);
   checksum = checksum & 0x7f;
   write_byte_uart0(checksum);
   write_byte_uart0(END_SYSEX);
@@ -478,13 +482,15 @@ static void send_smart_voltage(int16_t vol_value)
 static void send_smart_current(int16_t cur_value)
 {
   uint8_t checksum;
+  float cur_temp;
   //response mesaage to UART0
   write_byte_uart0(START_SYSEX);
   write_byte_uart0(device_id);
   write_byte_uart0(SMART_SERVO);
   write_byte_uart0(GET_SERVO_ELECTRIC_CURRENT);
   checksum = (device_id + SMART_SERVO + GET_SERVO_ELECTRIC_CURRENT);
-  checksum += sendShort(cur_value,false);
+  cur_temp = calculate_current(cur_value);
+  checksum += sendFloat(cur_temp);
   checksum = checksum & 0x7f;
   write_byte_uart0(checksum);
   write_byte_uart0(END_SYSEX);
@@ -546,10 +552,17 @@ static void smart_servo_cmd_process(void *arg)
       led_r = readbyte(sysex.val.value,1);
       led_g = readbyte(sysex.val.value,3);
       led_b = readbyte(sysex.val.value,5);
-	  smart_led.R = led_r;
-	  smart_led.G = led_g;
-	  smart_led.B = led_b;
+      smart_led.R = led_r;
+      smart_led.G = led_g;
+      smart_led.B = led_b;
       smart_servo_led(led_r,led_g,led_b);
+      SendErrorUart0(PROCESS_SUC);
+      break;
+    }
+    case SERVO_SHARKE_HAND:
+    {
+      shake_hand_flag = true;
+      blink_count = 0;
       SendErrorUart0(PROCESS_SUC);
       break;
     }
@@ -1183,7 +1196,9 @@ static void cmd_get_servo_pos(char *cmd)
 
 static void cmd_get_servo_speed(char *cmd)
 {
-  uart0_printf("G%d M6 S%.2f\r\n",device_id,smart_servo_speed_val);
+  float speed_temp = smart_servo_speed_val;
+  speed_temp = ((speed_temp * (1000.0/SAMPLING_INTERVAL_TIME))/4396) * 60;
+  uart0_printf("G%d M6 S%.2f\r\n",device_id,speed_temp);
 }
 
 static void cmd_get_servo_temperature(char *cmd)
