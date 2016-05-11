@@ -5,6 +5,7 @@
 #include "protocol.h"
 #include "uart_printf.h"
 #include "smartservo.h"
+#include "dataflash.h"
 #include "MePwm.h"
 #include "math.h"
 #include "systime.h"
@@ -32,7 +33,9 @@ volatile uint16_t Uart0SendRtail  = 0;
 
 uint8_t device_id = 0;              //hardware ID, Uniqueness in a link.
 uint8_t device_type = CUSTOM_TYPE;  //device type, Indicates the type of module, 0x00 indicates no external module
-uint8_t command_mode = G_CODE_MODE;    //G_CODE_MODE,FIRMATA_DATA_MODE
+uint8_t command_mode = FIRMATA_DATA_MODE;    //G_CODE_MODE,FIRMATA_DATA_MODE
+
+char mVersion[10] = "01.01.003";   //最高位表示 命令模式。
 
 union sysex_message sysex = {0};
 
@@ -292,6 +295,42 @@ static void cmd_test_response(void *arg)
 static void system_reset_response(void *arg)
 {
 
+}
+
+static void system_version_response(void *arg)
+{
+  uint8_t checksum;
+  uint8_t cmd_mode;
+  uint8_t main_ver;
+  uint8_t minor_ver;
+  
+  cmd_mode = atoi(mVersion);
+  main_ver = atoi(mVersion+3);
+  minor_ver = atoi(mVersion+6);
+  //response mesaage to UART0
+  write_byte_uart0(START_SYSEX);
+  write_byte_uart0(device_id);
+  write_byte_uart0(CTL_READ_DEV_VERSION);
+  write_byte_uart0(cmd_mode);
+  write_byte_uart0(main_ver);
+  write_byte_uart0(minor_ver);
+  checksum = (device_id + CTL_READ_DEV_VERSION + cmd_mode + main_ver + minor_ver);
+  checksum = checksum & 0x7f;
+  write_byte_uart0(checksum);
+  write_byte_uart0(END_SYSEX);
+}
+
+static void set_cmd_mode_response(void *arg)
+{
+  uint8_t cmd_mode = sysex.val.value[0];
+  if(flash_write_data_mode((uint32_t)cmd_mode) == SPI_FLASH_RESULT_OK)
+  {
+    SendErrorUart0(PROCESS_SUC);
+  }
+  else
+  {
+    SendErrorUart0(PROCESS_ERROR);
+  }
 }
 
 static void shake_hand_response(void *arg)
@@ -610,9 +649,11 @@ static void smart_servo_cmd_process(void *arg)
 const Cmd_list_tab_type cmd_list_tab[]={
 {CTL_ASSIGN_DEV_ID,NULL,assign_dev_id_response},
 {CTL_SYSTEM_RESET,NULL,system_reset_response},
+{CTL_READ_DEV_VERSION,NULL,system_version_response},
 {CTL_SHAKE_HANDS,NULL,shake_hand_response},
 {CTL_SET_BAUD_RATE,NULL,set_baud_rate},
 {CTL_CMD_TEST,NULL,cmd_test_response},
+{CTL_SET_CMD_MODE,NULL,set_cmd_mode_response},
 {CTL_DIGITAL_MESSAGE,NULL,write_digital_response},
 {CTL_ANALOG_MESSAGE,NULL,write_analog_response},
 {CTL_REPORT_DIGITAL,NULL,report_digital_response},
@@ -1053,13 +1094,13 @@ static void cmd_assign_dev_id(char *cmd)
   char * str;
   int8_t dev_id;
   str = strtok_r(cmd, " ", &tmp);
-	if(str != NULL)
+  if(str != NULL)
   {
     str = strtok_r(0, " ", &tmp);
   }
   if(str[0]=='D')
   {
-    dev_id = atof(str+1);
+    dev_id = atoi(str+1);
   }
   device_id = dev_id + 1;
   uart0_printf("G%d M10 T%d\r\n",device_id,device_type);
@@ -1069,14 +1110,38 @@ static void cmd_assign_dev_id(char *cmd)
 
 static void cmd_set_command_mode(char *cmd)
 {
-  
+  char * tmp;
+  char * str;
+  uint8_t cmd_mode;
+  str = strtok_r(cmd, " ", &tmp);
+  if(str != NULL)
+  {
+    str = strtok_r(0, " ", &tmp);
+  }
+  if(str[0]=='C')
+  {
+    cmd_mode = atoi(str+1);
+    if(flash_write_data_mode((uint32_t)cmd_mode) == SPI_FLASH_RESULT_OK)
+    {
+      SendErrorUart0(PROCESS_SUC);
+    }
+    else
+    {
+      SendErrorUart0(PROCESS_ERROR);
+    }
+  }
+	else
+	{
+    SendErrorUart0(WRONG_INPUT_DATA);
+	}
 }
+
 
 static void cmd_shake_hand(char *cmd)
 {
   shake_hand_flag = true;
   blink_count = 0;
-  uart0_printf("G%d M20\r\n",device_id);
+  SendErrorUart0(PROCESS_SUC);
 }
 
 static void cmd_absolute_pos(char *cmd)
@@ -1106,7 +1171,7 @@ static void cmd_absolute_pos(char *cmd)
     str = strtok_r(0, " ", &tmp);
     if(str[0]=='P')
     {
-      angle = atof(str+1);
+      angle = atoi(str+1);
     }
     else if(str[0]=='S')
     {
@@ -1114,7 +1179,7 @@ static void cmd_absolute_pos(char *cmd)
     }
   }
   smart_servo_move_to(angle,speed);
-  uart0_printf("G%d M1 P%d, S%.2f\r\n",device_id,angle,speed);
+  SendErrorUart0(PROCESS_SUC);
 }
 
 static void cmd_relative_pos(char *cmd)
@@ -1129,7 +1194,7 @@ static void cmd_relative_pos(char *cmd)
     str = strtok_r(0, " ", &tmp);
     if(str[0]=='P')
     {
-      angle = atof(str+1);
+      angle = atoi(str+1);
     }
     else if(str[0]=='S')
     {
@@ -1137,14 +1202,14 @@ static void cmd_relative_pos(char *cmd)
     }
   }
   smart_servo_move(angle,speed);
-  uart0_printf("G%d M2 P%d, S%.2f\r\n",device_id,angle,speed);
+  SendErrorUart0(PROCESS_SUC);
 }
 
 static void cmd_set_servo_break(char *cmd)
 {
   char * tmp;
   char * str;
-  int8_t break_value;
+  uint8_t break_value;
   str = strtok_r(cmd, " ", &tmp);
 	if(str != NULL)
   {
@@ -1152,10 +1217,10 @@ static void cmd_set_servo_break(char *cmd)
   }
   if(str[0]=='B')
   {
-    break_value = atof(str+1);
+    break_value = atoi(str+1);
   }
   smart_servo_break(break_value);
-  uart0_printf("G%d M3 B%d\r\n",device_id,break_value);
+  SendErrorUart0(PROCESS_SUC);
 }
 
 static void cmd_set_rgb_led(char *cmd)
@@ -1171,22 +1236,22 @@ static void cmd_set_rgb_led(char *cmd)
     str = strtok_r(0, " ", &tmp);
     if(str[0]=='R')
     {
-      r_value = atof(str+1);
+      r_value = atoi(str+1);
     }
     else if(str[0]=='G')
     {
-      g_value = atof(str+1);
+      g_value = atoi(str+1);
     }
     else if(str[0]=='B')
     {
-      b_value = atof(str+1);
+      b_value = atoi(str+1);
     }
   }
   smart_led.R = r_value;
   smart_led.G = g_value;
   smart_led.B = b_value;
   smart_servo_led(r_value,g_value,b_value);
-  uart0_printf("G%d M4 R%d, G%d, B%d\r\n",device_id,r_value,g_value,b_value);
+  SendErrorUart0(PROCESS_SUC);
 }
 
 static void cmd_get_servo_pos(char *cmd)
@@ -1270,6 +1335,9 @@ static void parse_mcode(char *cmd)
       break;
     case 10:
       cmd_assign_dev_id(cmd);
+      break;
+    case 16:
+      cmd_set_command_mode(cmd);
       break;
     case 20:
       cmd_shake_hand(cmd);

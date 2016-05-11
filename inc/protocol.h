@@ -22,6 +22,7 @@
 #define CTL_SET_BAUD_RATE       0x13 // Set the bandrate
 #define CTL_CMD_TEST            0x14 // Just for test
 #define CTL_ERROR_CODE          0x15 // error code
+#define CTL_SET_CMD_MODE        0x16 // set the command mode
 #define CTL_DIGITAL_MESSAGE     0x18 // send data for a digital pin
 #define CTL_ANALOG_MESSAGE      0x19 // send data for an analog pin (or PWM)
 #define CTL_REPORT_DIGITAL      0x1a // enable digital input by port pair
@@ -141,6 +142,7 @@ extern volatile uint16_t Uart1RevRtail;
 extern volatile uint16_t Uart0Sendhead;
 extern volatile uint16_t Uart0SendRtail;
 
+extern char mVersion[10];
 
 //Sensor value
 extern volatile int16_t report_mode;
