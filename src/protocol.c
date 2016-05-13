@@ -1075,6 +1075,7 @@ void device_neep_loop_in_sampling(void)
       if((smart_servo_cur_pos > SMART_SERVO_MAX_LIM_POS) ||
          (smart_servo_cur_pos < SMART_SERVO_MIN_LIM_POS))
       {
+        smart_servo_break(true);
         smart_led_blink(500,0,0,255);
         return;
       }
@@ -1082,9 +1083,13 @@ void device_neep_loop_in_sampling(void)
       {
         smart_servo_led(smart_led.R,smart_led.G,smart_led.B);
       }
+      speed = pid_position_to_pwm();
+      smart_servo_speed_update(speed);
     }
-    speed = pid_position_to_pwm();
-    smart_servo_speed_update(speed);
+    else
+    {
+      smart_servo_break(true);
+    }
   }
 }
 

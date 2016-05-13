@@ -288,9 +288,9 @@ int16_t pid_position_to_pwm(void)
   if(pos_lock_flag == true)
   {
     cur_pos = adc_get_position_value();
-		cur_pos = filter_position(cur_pos);
-	}
-	else
+    cur_pos = filter_position(cur_pos);
+  }
+  else
   {
     cur_pos = adc_get_position_value();
   }
@@ -330,7 +330,7 @@ int16_t pid_position_to_pwm(void)
     }
 
     PID_speed.Output = constrain(PID_speed.Output,SMART_SERVO_MIN_OUTPUT,SMART_SERVO_MAX_OUTPUT);
-		smart_servo_output = PID_speed.Output;
+    smart_servo_output = PID_speed.Output;
 //    uart_printf(UART0,"cur_speed:%.2f, tar_speed:%.2f, Output:%.2f, Pos:%d\r\n",cur_speed,smart_servo_target_speed,PID_speed.Output,cur_pos);
   }
 
