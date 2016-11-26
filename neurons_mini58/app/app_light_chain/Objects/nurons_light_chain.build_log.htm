@@ -1,0 +1,94 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: μVision V5.14.2.1
+Copyright (C) 2015 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Cortex-M0, Microsoft, LIC=X96FW-QIPVB-QDMKD-8FIJS-5CILH-WIJ8C
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Standard  Version: 5.13.0.0
+Toolchain Path:  D:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.05 update 1 (build 106)
+Assembler:       Armasm.exe V5.05 update 1 (build 106)
+Linker/Locator:  ArmLink.exe V5.05 update 1 (build 106)
+Library Manager: ArmAr.exe V5.05 update 1 (build 106)
+Hex Converter:   FromElf.exe V5.05 update 1 (build 106)
+CPU DLL:         SARMCM3.DLL V5.13.0.0
+Dialog DLL:      DARMCM1.DLL V1.12.0.0
+Target DLL:      NULink\Nu_Link.dll V1.30
+Dialog DLL:      TARMCM1.DLL V1.9.0.0
+ 
+<h2>Project:</h2>
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\nurons_light_chain.uvprojx
+Project File Date:  07/21/2016
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.05 update 1 (build 106)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
+Rebuild target 'Target 1'
+assembling startup_Mini58Series.s...
+compiling MeLedChain.c...
+compiling acmp.c...
+compiling adc.c...
+compiling clk.c...
+compiling fmc.c...
+compiling gpio.c...
+compiling i2c.c...
+compiling pwm.c...
+compiling retarget.c...
+compiling spi.c...
+compiling sys.c...
+compiling timer.c...
+compiling uart.c...
+compiling wdt.c...
+compiling wwdt.c...
+compiling Interrupt.c...
+compiling system_Mini58Series.c...
+compiling mygpio.c...
+compiling protocol.c...
+compiling sysinit.c...
+compiling systime.c...
+compiling uart_printf.c...
+compiling main.c...
+main.c(134): warning:  #177-D: variable "r_value" was declared but never referenced
+        uint8_t r_value, b_value, g_value;
+main.c(134): warning:  #177-D: variable "b_value" was declared but never referenced
+        uint8_t r_value, b_value, g_value;
+main.c(134): warning:  #177-D: variable "g_value" was declared but never referenced
+        uint8_t r_value, b_value, g_value;
+main.c: 3 warnings, 0 errors
+linking...
+Program Size: Code=23464 RO-data=1060 RW-data=268 ZI-data=1852  
+FromELF: creating hex file...
+After Build - User command #1: H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\copy_hex.bat
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain>cd Objects 
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\Objects>set dir_cur=H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\Objects  
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\Objects>set t=2016 
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\Objects>set t=20160817 
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\Objects>for /F "delims=." %a in ('dir /a-d/b *.hex') do set app=%a 
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\Objects>set app=nurons_light_chain 
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\Objects>cd .. 
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain>cd ..  
+H:\neurons\BareCode_split\neurons_mini58\app>cd .. 
+H:\neurons\BareCode_split\neurons_mini58>cd .. 
+H:\neurons\BareCode_split>cd neurons_firmware 
+H:\neurons\BareCode_split\neurons_firmware>if exist nurons_light_chain*.hex del nurons_light_chain*.hex 
+H:\neurons\BareCode_split\neurons_firmware>cd H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\Objects  
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\Objects>for /F "delims=" %a in ('dir /a-d/b *.hex') do ren "%~a" "%~na_20160817%~xa" 
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\Objects>ren "nurons_light_chain.hex" "nurons_light_chain_20160817.hex" 
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\Objects>copy /Y  *hex  ..\..\..\..\neurons_firmware 
+nurons_light_chain_20160817.hex
+已复制         1 个文件。
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\Objects>for /R %i in (*.hex) do del *.hex 
+H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\Objects>del *.hex 
+".\Objects\nurons_light_chain.axf" - 0 Error(s), 3 Warning(s).
+
+<h2>Collection of Component include folders:</h2>
+  H:\neurons\BareCode_split\neurons_mini58\app\app_light_chain\RTE
+  D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.4\Device\MINI58\Include
+
+<h2>Collection of Component Files used:</h2>
+</pre>
+</body>
+</html>

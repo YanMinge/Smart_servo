@@ -1,6 +1,0 @@
--c --cpu Cortex-M0 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I..\Library\CMSIS\Include -I..\Library\Device\Nuvoton\M051Series\Include -I..\Library\StdDriver\inc -I..\inc
--I "E:\2016\Neuron_servo 0429\Neuron_servo\keil\RTE"
--I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.4\Device\M051\Include
--I D:\Keil_v5\ARM\CMSIS\Include
--D__UVISION_VERSION="513"
--o .\objects\system_m051series.o --omf_browse .\objects\system_m051series.crf --depend .\objects\system_m051series.d "..\Library\Device\Nuvoton\M051Series\Source\system_M051Series.c"

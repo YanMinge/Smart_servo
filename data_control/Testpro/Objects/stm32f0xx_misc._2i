@@ -1,0 +1,6 @@
+-c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I.\Libraries\CMSIS\Include -I.\Libraries\STM32F0xx_StdPeriph_Driver\inc -I.\Libraries\STM32F0xx_StdPeriph_Driver\src -I.\RTE\Device\STM32F030CC -I.\Libraries\CMSIS\Device\ST\STM32F0xx\Include -I.\usr
+-I E:\2016\智能舵机\最新\套件主控板\资源\Testpro\RTE
+-I D:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\1.5.0\Device\Include
+-I D:\Keil_v5\ARM\CMSIS\Include
+-D__UVISION_VERSION="514" -DSTM32F030xC -DUSE_STDPERIPH_DRIVER
+-o .\objects\stm32f0xx_misc.o --omf_browse .\objects\stm32f0xx_misc.crf --depend .\objects\stm32f0xx_misc.d --feedback ".\Objects\TestPro.fed" "Libraries\STM32F0xx_StdPeriph_Driver\src\stm32f0xx_misc.c"

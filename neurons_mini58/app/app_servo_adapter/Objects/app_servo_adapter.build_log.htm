@@ -1,0 +1,122 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: μVision V5.14.2.1
+Copyright (C) 2015 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Cortex-M0, Microsoft, LIC=X96FW-QIPVB-QDMKD-8FIJS-5CILH-WIJ8C
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Standard  Version: 5.13.0.0
+Toolchain Path:  D:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.05 update 1 (build 106)
+Assembler:       Armasm.exe V5.05 update 1 (build 106)
+Linker/Locator:  ArmLink.exe V5.05 update 1 (build 106)
+Library Manager: ArmAr.exe V5.05 update 1 (build 106)
+Hex Converter:   FromElf.exe V5.05 update 1 (build 106)
+CPU DLL:         SARMCM3.DLL V5.13.0.0
+Dialog DLL:      DARMCM1.DLL V1.12.0.0
+Target DLL:      UL2CM3.DLL V1.154.12.0
+Dialog DLL:      TARMCM1.DLL V1.9.0.0
+ 
+<h2>Project:</h2>
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\app_servo_adapter.uvprojx
+Project File Date:  09/26/2016
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.05 update 1 (build 106)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
+Rebuild target 'Target 1'
+assembling startup_Mini58Series.s...
+compiling system_Mini58Series.c...
+compiling Interrupt.c...
+compiling mygpio.c...
+compiling sysinit.c...
+compiling systime.c...
+compiling uart_printf.c...
+compiling protocol.c...
+compiling acmp.c...
+compiling adc.c...
+compiling clk.c...
+compiling fmc.c...
+compiling gpio.c...
+compiling i2c.c...
+compiling pwm.c...
+compiling retarget.c...
+compiling spi.c...
+compiling sys.c...
+compiling timer.c...
+compiling uart.c...
+compiling wdt.c...
+compiling wwdt.c...
+compiling main.c...
+main.c(600): warning:  #550-D: variable "ServiceId" was set but never used
+    uint8_t ServiceId = 0;
+main.c(601): warning:  #550-D: variable "subSevice" was set but never used
+    uint8_t subSevice = 0;
+main.c(602): warning:  #550-D: variable "reportType" was set but never used
+    uint8_t reportType = 0;
+main.c(621): warning:  #550-D: variable "DeviceId" was set but never used
+    uint8_t DeviceId = 0;
+main.c(622): warning:  #550-D: variable "ServiceId" was set but never used
+    uint8_t ServiceId = 0;
+main.c(630): warning:  #550-D: variable "DeviceId" was set but never used
+    uint8_t DeviceId = 0;
+main.c(632): warning:  #550-D: variable "errorcode" was set but never used
+    uint8_t errorcode = CHECK_ERROR;
+main.c(645): warning:  #550-D: variable "DeviceId" was set but never used
+    uint8_t DeviceId = 0;
+main.c(646): warning:  #550-D: variable "ServiceId" was set but never used
+    uint8_t ServiceId = 0;
+main.c(654): warning:  #550-D: variable "DeviceId" was set but never used
+    uint8_t DeviceId = 0;
+main.c(656): warning:  #550-D: variable "errorcode" was set but never used
+    uint8_t errorcode = CHECK_ERROR;
+main.c(697): warning:  #1-D: last line of file ends without a newline
+  }
+main.c(149): warning:  #177-D: function "readbyte" was declared but never referenced
+  static uint8_t readbyte(uint8_t *argv,int idx)
+main.c(158): warning:  #177-D: function "readShort" was declared but never referenced
+  static short readShort(uint8_t *argv,int idx,boolean ignore_high)
+main.c(176): warning:  #177-D: function "readfloat" was declared but never referenced
+  static float readfloat(uint8_t *argv,int idx)
+main.c(220): warning:  #177-D: function "sendbyte" was declared but never referenced
+  static void sendbyte(int8_t val)
+main.c(251): warning:  #177-D: function "sendFloat" was declared but never referenced
+  static void sendFloat(float val)
+main.c: 17 warnings, 0 errors
+linking...
+Program Size: Code=8364 RO-data=300 RW-data=188 ZI-data=2020  
+FromELF: creating hex file...
+After Build - User command #1: E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\copy_hex.bat
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter>cd Objects 
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects>set dir_cur=E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects  
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects>set t=2016 
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects>set t=20160927 
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects>for /F "delims=." %a in ('dir /a-d/b *.hex') do set app=%a 
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects>set app=app_servo_adapter 
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects>cd .. 
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter>cd ..  
+E:\2016\智能舵机\其它模块\neurons_mini58\app>cd .. 
+E:\2016\智能舵机\其它模块\neurons_mini58>cd .. 
+E:\2016\智能舵机\其它模块>cd neurons_firmware 
+E:\2016\智能舵机\其它模块\neurons_firmware>if exist app_servo_adapter*.hex del app_servo_adapter*.hex 
+E:\2016\智能舵机\其它模块\neurons_firmware>cd E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects  
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects>for /F "delims=" %a in ('dir /a-d/b *.hex') do ren "%~a" "%~na_20160927%~xa" 
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects>ren "app_servo_adapter.hex" "app_servo_adapter_20160927.hex" 
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects>copy /Y  *hex  ..\..\..\..\neurons_firmware 
+app_servo_adapter_20160927.hex
+已复制         1 个文件。
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects>for /R %i in (*.hex) do del *.hex 
+E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects>del *.hex 
+After Build - User command #2: D:\Keil_v5\ARM\ARMCC\bin\fromelf.exe --bin --output E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects\app_servo_adapter.bin  E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\Objects\app_servo_adapter.axf
+".\Objects\app_servo_adapter.axf" - 0 Error(s), 17 Warning(s).
+
+<h2>Collection of Component include folders:</h2>
+  E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE
+  D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include
+
+<h2>Collection of Component Files used:</h2>
+</pre>
+</body>
+</html>

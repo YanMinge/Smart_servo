@@ -1,0 +1,87 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: μVision V5.14.2.1
+Copyright (C) 2015 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Cortex-M0, Microsoft, LIC=X96FW-QIPVB-QDMKD-8FIJS-5CILH-WIJ8C
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Standard  Version: 5.13.0.0
+Toolchain Path:  D:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.05 update 1 (build 106)
+Assembler:       Armasm.exe V5.05 update 1 (build 106)
+Linker/Locator:  ArmLink.exe V5.05 update 1 (build 106)
+Library Manager: ArmAr.exe V5.05 update 1 (build 106)
+Hex Converter:   FromElf.exe V5.05 update 1 (build 106)
+CPU DLL:         SARMCM3.DLL V5.13.0.0
+Dialog DLL:      DARMCM1.DLL V1.12.0.0
+Target DLL:      UL2CM3.DLL V1.154.12.0
+Dialog DLL:      TARMCM1.DLL V1.9.0.0
+ 
+<h2>Project:</h2>
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\app_ultrasonic_sensor.uvprojx
+Project File Date:  08/17/2016
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.05 update 1 (build 106)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
+Rebuild target 'Target 1'
+compiling system_Mini58Series.c...
+assembling startup_Mini58Series.s...
+compiling MeUltrasonicSensor.c...
+compiling Interrupt.c...
+compiling mygpio.c...
+compiling protocol.c...
+compiling sysinit.c...
+compiling systime.c...
+compiling uart_printf.c...
+compiling main.c...
+compiling acmp.c...
+compiling adc.c...
+compiling clk.c...
+compiling fmc.c...
+compiling gpio.c...
+compiling i2c.c...
+compiling pwm.c...
+compiling retarget.c...
+compiling spi.c...
+compiling sys.c...
+compiling timer.c...
+compiling uart.c...
+compiling wdt.c...
+compiling wwdt.c...
+linking...
+Program Size: Code=16944 RO-data=564 RW-data=172 ZI-data=1764  
+FromELF: creating hex file...
+After Build - User command #1: H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\copy_hex.bat
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor>cd Objects 
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\Objects>set dir_cur=H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\Objects  
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\Objects>set t=2016 
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\Objects>set t=20160817 
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\Objects>for /F "delims=." %a in ('dir /a-d/b *.hex') do set app=%a 
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\Objects>set app=app_ultrasonic_sensor 
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\Objects>cd .. 
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor>cd ..  
+H:\neurons\BareCode_split\neurons_mini58\app>cd .. 
+H:\neurons\BareCode_split\neurons_mini58>cd .. 
+H:\neurons\BareCode_split>cd neurons_firmware 
+H:\neurons\BareCode_split\neurons_firmware>if exist app_ultrasonic_sensor*.hex del app_ultrasonic_sensor*.hex 
+H:\neurons\BareCode_split\neurons_firmware>cd H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\Objects  
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\Objects>for /F "delims=" %a in ('dir /a-d/b *.hex') do ren "%~a" "%~na_20160817%~xa" 
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\Objects>ren "app_ultrasonic_sensor.hex" "app_ultrasonic_sensor_20160817.hex" 
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\Objects>copy /Y  *hex  ..\..\..\..\neurons_firmware 
+app_ultrasonic_sensor_20160817.hex
+已复制         1 个文件。
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\Objects>for /R %i in (*.hex) do del *.hex 
+H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\Objects>del *.hex 
+".\Objects\app_ultrasonic_sensor.axf" - 0 Error(s), 0 Warning(s).
+
+<h2>Collection of Component include folders:</h2>
+  H:\neurons\BareCode_split\neurons_mini58\app\app_ultrasonic_sensor\RTE
+  D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.4\Device\MINI58\Include
+
+<h2>Collection of Component Files used:</h2>
+</pre>
+</body>
+</html>

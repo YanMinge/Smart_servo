@@ -1,0 +1,109 @@
+C51 COMPILER V9.55   UART_PRINTF                                                           08/20/2016 11:21:18 PAGE 1   
+
+
+C51 COMPILER V9.55, COMPILATION OF MODULE UART_PRINTF
+OBJECT MODULE PLACED IN .\Objects\uart_printf.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE src\uart_printf.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Li
+                    -stings\uart_printf.lst) TABS(2) OBJECT(.\Objects\uart_printf.obj)
+
+line level    source
+
+   1          #include "STC15F2K60S2.h"
+   2          #include "stdint.h"
+   3          #include <stdio.h>
+   4          #include <stdarg.h>
+   5          
+   6          #define BAUD  0xFE80                  // 9600bps @ 11.0592MHz
+   7          
+   8          sbit TXB = P3^1;
+   9          
+  10          
+  11          BYTE TBUF,RBUF;
+  12          BYTE TDAT,RDAT;
+  13          BYTE TCNT,RCNT;
+  14          BYTE TBIT,RBIT;
+  15          BOOL TING,RING;
+  16          BOOL TEND,REND;
+  17          
+  18          void uart_init()
+  19          {
+  20   1        TING = 0;
+  21   1        RING = 0;
+  22   1        TEND = 1;
+  23   1        REND = 0;
+  24   1        TCNT = 0;
+  25   1        RCNT = 0;
+  26   1        AUXR |= 0x80;
+  27   1        TMOD &= 0xF0;
+  28   1        TL0 = BAUD;
+  29   1        TH0 = BAUD>>8;
+  30   1        TF0 = 0;
+  31   1        TR0 = 1;
+  32   1        ET0 = 1; 
+  33   1        PT0 = 1; 
+  34   1        
+  35   1      }
+  36          
+  37          void tm0() interrupt 1 using 1
+  38          {
+  39   1        if (--TCNT == 0)
+  40   1        {
+  41   2          TCNT = 3;                       //reset send baudrate counter
+  42   2          if (TING)                       //judge whether sending
+  43   2          {
+  44   3            if (TBIT == 0)
+  45   3            {
+  46   4              TXB = 0;                //send start bit
+  47   4              TDAT = TBUF;            //load data from TBUF to TDAT
+  48   4              TBIT = 9;               //initial send bit number (8 data bits + 1 stop bit)
+  49   4            }
+  50   3            else
+  51   3            {
+  52   4              TDAT >>= 1;             //shift data to CY
+  53   4              if (--TBIT == 0)
+  54   4              {
+C51 COMPILER V9.55   UART_PRINTF                                                           08/20/2016 11:21:18 PAGE 2   
+
+  55   5                TXB = 1;
+  56   5                TING = 0;           //stop send
+  57   5                TEND = 1;           //set send completed flag
+  58   5              }
+  59   4              else
+  60   4              {
+  61   5                TXB = CY;           //write CY to TX port
+  62   5              }
+  63   4            }
+  64   3          }
+  65   2        }
+  66   1      }
+  67          
+  68          void uart_write(uint8_t dat)
+  69          {
+  70   1        while (!TEND);
+  71   1        TEND = 0;
+  72   1        TBUF = dat;
+  73   1        TING = 1;
+  74   1      }
+  75          
+  76          void send_string(char *str)
+  77          {
+  78   1        while(*str)
+  79   1        {
+  80   2          uart_write(*str++);
+  81   2        }
+  82   1      }
+  83          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    135    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      4    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

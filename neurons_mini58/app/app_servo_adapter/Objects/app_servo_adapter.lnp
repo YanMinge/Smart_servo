@@ -1,0 +1,28 @@
+--cpu Cortex-M0
+".\objects\startup_mini58series.o"
+".\objects\system_mini58series.o"
+".\objects\interrupt.o"
+".\objects\mygpio.o"
+".\objects\sysinit.o"
+".\objects\systime.o"
+".\objects\uart_printf.o"
+".\objects\protocol.o"
+".\objects\acmp.o"
+".\objects\adc.o"
+".\objects\clk.o"
+".\objects\fmc.o"
+".\objects\gpio.o"
+".\objects\i2c.o"
+".\objects\pwm.o"
+".\objects\retarget.o"
+".\objects\spi.o"
+".\objects\sys.o"
+".\objects\timer.o"
+".\objects\uart.o"
+".\objects\wdt.o"
+".\objects\wwdt.o"
+".\objects\main.o"
+--strict --scatter ".\Objects\app_servo_adapter.sct"
+--entry Reset_Handler --summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\app_servo_adapter.map" -o .\Objects\app_servo_adapter.axf

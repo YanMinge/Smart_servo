@@ -1,0 +1,489 @@
+Dependencies for Project 'app_servo_adapter', Target 'Target 1': (DO NOT MODIFY !)
+F (..\..\Library\Device\Nuvoton\Mini58Series\Source\ARM\startup_Mini58Series.s)(0x57483BCE)(--cpu Cortex-M0 -g --apcs=interwork -I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include--pd "__UVISION_VERSION SETA 514"--list .\listings\startup_mini58series.lst --xref -o .\objects\startup_mini58series.o --depend .\objects\startup_mini58series.d)
+F (..\..\Library\Device\Nuvoton\Mini58Series\Source\system_Mini58Series.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\system_mini58series.o --omf_browse .\objects\system_mini58series.crf --depend .\objects\system_mini58series.d)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\common_utils\Interrupt.c)(0x57E270FD)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\interrupt.o --omf_browse .\objects\interrupt.crf --depend .\objects\interrupt.d)
+I (..\..\common_utils\Interrupt.h)(0x57E8FA1C)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+I (..\..\common_utils\sysinit.h)(0x57E8FA3A)
+I (..\..\common_utils\protocol.h)(0x57E8FB7F)
+I (..\..\common_utils\mygpio.h)(0x57904E03)
+I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\block_driver\MeInfraredReceiver.h)(0x57483BCE)
+I (..\..\common_utils\systime.h)(0x57483BCE)
+I (..\..\block_driver\MeUltrasonicSensor.h)(0x57E270FD)
+F (..\..\common_utils\mygpio.c)(0x57E270FD)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\mygpio.o --omf_browse .\objects\mygpio.crf --depend .\objects\mygpio.d)
+I (..\..\common_utils\mygpio.h)(0x57904E03)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+I (..\..\common_utils\sysinit.h)(0x57E8FA3A)
+F (..\..\common_utils\sysinit.c)(0x57E270FD)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\sysinit.o --omf_browse .\objects\sysinit.crf --depend .\objects\sysinit.d)
+I (..\..\common_utils\systime.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+I (..\..\common_utils\sysinit.h)(0x57E8FA3A)
+I (..\..\common_utils\mygpio.h)(0x57904E03)
+I (..\..\common_utils\uart_printf.h)(0x57E270FD)
+I (..\..\common_utils\protocol.h)(0x57E8FB7F)
+I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+F (..\..\common_utils\systime.c)(0x57904E03)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\systime.o --omf_browse .\objects\systime.crf --depend .\objects\systime.d)
+I (..\..\common_utils\systime.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\common_utils\uart_printf.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\uart_printf.o --omf_browse .\objects\uart_printf.crf --depend .\objects\uart_printf.d)
+I (..\..\common_utils\uart_printf.h)(0x57E270FD)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (D:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5475F2FA)
+I (..\..\common_utils\protocol.h)(0x57E8FB7F)
+I (..\..\common_utils\mygpio.h)(0x57904E03)
+I (..\..\common_utils\sysinit.h)(0x57E8FA3A)
+F (..\..\common_utils\block_param.h)(0x57E270FD)()
+F (..\..\common_utils\Interrupt.h)(0x57E8FA1C)()
+F (..\..\common_utils\mygpio.h)(0x57904E03)()
+F (..\..\common_utils\sysinit.h)(0x57E8FA3A)()
+F (..\..\common_utils\systime.h)(0x57483BCE)()
+F (..\..\common_utils\uart_printf.h)(0x57E270FD)()
+F (..\..\common_utils\protocol.h)(0x57E8FB7F)()
+F (..\..\common_utils\protocol.c)(0x57E8CFFF)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\protocol.o --omf_browse .\objects\protocol.crf --depend .\objects\protocol.d)
+I (D:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
+I (..\..\common_utils\protocol.h)(0x57E8FB7F)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+I (..\..\common_utils\mygpio.h)(0x57904E03)
+I (..\..\common_utils\sysinit.h)(0x57E8FA3A)
+I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\common_utils\uart_printf.h)(0x57E270FD)
+I (D:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5475F2FA)
+F (..\..\Library\StdDriver\src\acmp.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\acmp.o --omf_browse .\objects\acmp.crf --depend .\objects\acmp.d)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\Library\StdDriver\src\adc.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\adc.o --omf_browse .\objects\adc.crf --depend .\objects\adc.d)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\Library\StdDriver\src\clk.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\clk.o --omf_browse .\objects\clk.crf --depend .\objects\clk.d)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\Library\StdDriver\src\fmc.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\fmc.o --omf_browse .\objects\fmc.crf --depend .\objects\fmc.d)
+I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\Library\StdDriver\src\gpio.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\gpio.o --omf_browse .\objects\gpio.crf --depend .\objects\gpio.d)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\Library\StdDriver\src\i2c.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\i2c.o --omf_browse .\objects\i2c.crf --depend .\objects\i2c.d)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\Library\StdDriver\src\pwm.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\pwm.o --omf_browse .\objects\pwm.crf --depend .\objects\pwm.d)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\Library\StdDriver\src\retarget.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\retarget.o --omf_browse .\objects\retarget.crf --depend .\objects\retarget.d)
+I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\Library\StdDriver\src\spi.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\spi.o --omf_browse .\objects\spi.crf --depend .\objects\spi.d)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\Library\StdDriver\src\sys.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\sys.o --omf_browse .\objects\sys.crf --depend .\objects\sys.d)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\Library\StdDriver\src\timer.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\timer.o --omf_browse .\objects\timer.crf --depend .\objects\timer.d)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\Library\StdDriver\src\uart.c)(0x57904E03)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\uart.o --omf_browse .\objects\uart.crf --depend .\objects\uart.d)
+I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\Library\StdDriver\src\wdt.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\wdt.o --omf_browse .\objects\wdt.crf --depend .\objects\wdt.d)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (..\..\Library\StdDriver\src\wwdt.c)(0x57483BCE)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\wwdt.o --omf_browse .\objects\wwdt.crf --depend .\objects\wwdt.d)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+F (.\main.c)(0x57EA575B)(--c99 -c --cpu Cortex-M0 -g -O0 --apcs=interwork --split_sections -I..\..\block_driver -I..\..\common_utils -I..\..\Library\CMSIS\Include -I..\..\Library\Device\Nuvoton\Mini58Series\Include -I..\..\Library\StdDriver\inc-I E:\2016\智能舵机\其它模块\neurons_mini58\app\app_servo_adapter\RTE-I D:\Keil_v5\ARM\PACK\Nuvoton\NuMicro_DFP\1.0.8\Device\Mini58\Include-I D:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514"-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+I (..\..\common_utils\sysinit.h)(0x57E8FA3A)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\Mini58Series.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cm0.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (..\..\Library\CMSIS\Include\core_cmInstr.h)(0x57483BCE)
+I (..\..\Library\CMSIS\Include\core_cmFunc.h)(0x57483BCE)
+I (..\..\Library\Device\Nuvoton\Mini58Series\Include\system_Mini58Series.h)(0x57904E03)
+I (..\..\Library\StdDriver\inc\sys.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\clk.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\acmp.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\adc.h)(0x57B40C63)
+I (..\..\Library\StdDriver\inc\fmc.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\gpio.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\i2c.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\pwm.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\spi.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\timer.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\uart.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wdt.h)(0x57483BCE)
+I (..\..\Library\StdDriver\inc\wwdt.h)(0x57483BCE)
+I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (..\..\common_utils\uart_printf.h)(0x57E270FD)
+I (..\..\common_utils\mygpio.h)(0x57904E03)
+I (..\..\common_utils\protocol.h)(0x57E8FB7F)
+I (..\..\common_utils\systime.h)(0x57483BCE)
+I (..\..\common_utils\Interrupt.h)(0x57E8FA1C)

@@ -1,0 +1,6 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\systime.obj",
+".\Objects\uart_printf.obj" 
+TO ".\Objects\PowerBoard" 
+PRINT(".\Listings\PowerBoard.m51")
