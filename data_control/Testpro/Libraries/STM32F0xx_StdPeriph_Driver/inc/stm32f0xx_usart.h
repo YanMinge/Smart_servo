@@ -36,6 +36,19 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx.h"
+	 
+#define BUFFER_SIZE       128
+
+#define UART1             0
+#define UART2             1
+#define UART3             2
+#define UART4             3
+#define UART5             4
+
+#define USART_MAX_INDEX   5
+
+extern uint8_t aTxBuffer[USART_MAX_INDEX][BUFFER_SIZE];
+extern uint8_t aRxBuffer[USART_MAX_INDEX][BUFFER_SIZE];
 
 /** @addtogroup STM32F0xx_StdPeriph_Driver
   * @{
@@ -543,9 +556,6 @@ void USART_AutoBaudRateConfig(USART_TypeDef* USARTx, uint32_t USART_AutoBaudRate
 /* Data transfers functions ***************************************************/
 void USART_SendData(USART_TypeDef* USARTx, uint16_t Data);
 uint16_t USART_ReceiveData(USART_TypeDef* USARTx);
-void send_string(USART_TypeDef* USARTx,char *str);
-void uart_printf(USART_TypeDef* USARTx,char *fmt,...);
-
 
 /* Multi-Processor Communication functions ************************************/
 void USART_SetAddress(USART_TypeDef* USARTx, uint8_t USART_Address);

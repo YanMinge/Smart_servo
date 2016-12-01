@@ -93,6 +93,7 @@ int32_t main(void)
   angle_pos_offset = (int16_t)flash_read_angle_offset();
   samrt_servo_init();
   device_id = 0;
+  device_id_2 = 0;
   device_type = SMART_SERVO;
   delay(50);
   uart_printf(UART0,"V%s\r\n",mVersion);

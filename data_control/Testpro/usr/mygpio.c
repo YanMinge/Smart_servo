@@ -1,101 +1,115 @@
 #include "mygpio.h"
+#include "uart_printf.h"
 
 long map(long x, long in_min, long in_max, long out_min, long out_max)
 {
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-//int pin_to_index(int pin)
-//{
-//  return (pin&0xf0)*8+pin&0x0f;
-//}
-//	
-//boolean is_pin_servo(int pin)
-//{
-//  if((pin&0xf0) == 0x20)
-//  {
-//    return true;
-//  }
-//  else
-//  {
-//    return false;
-//  }
-//}
+void pinMode(uint8_t pin,uint8_t mode)
+{
+  uint8_t port,pin_num;
+  uint16_t gpio_pin = 0;
+  GPIO_InitTypeDef GPIO_InitStructure;
 
-//boolean is_pin_pwm(int pin)
-//{
-//  if((pin&0xf0) == 0x20)
-//  {
-//    return true;
-//  }
-//  else
-//  {
-//    return false;
-//  }
-//}
+  port = (pin & 0xf0) >> 4;
+  pin_num = (pin & 0x0f);
+  gpio_pin = 1 << pin_num;
 
-//boolean is_pin_analog(int pin)
-//{
-//  if((pin == 0x10) || (pin == 0x12) || (pin == 0x13) ||
-//     (pin == 0x14) || (pin == 0x15))
-//  {
-//    return true;
-//  }
-//  else
-//  {
-//    return false;
-//  }
-//}
+  GPIO_InitStructure.GPIO_Pin = gpio_pin;
 
-//void pinMode(uint8_t pin,uint8_t mode)
-//{
-//  uint8_t port,pin_num;
-//  port = (pin&0xf0) >> 4;
-//  pin_num =  1 << (pin&0x0f);
-//  switch(port)
-//  {
-//    case 0:
-//      PIN_Mode(0,pin_num,mode);
-//      break;
-//    case 1:
-//      PIN_Mode(1,pin_num,mode);
-//      break;
-//    case 2:
-//      PIN_Mode(2,pin_num,mode);
-//      break;
-//    case 3:
-//      PIN_Mode(3,pin_num,mode);
-//      break;
-//    case 4:
-//      PIN_Mode(3,pin_num,mode);
-//      break;
-//    default:
-//      break;
-//  }
-//}
+  if(mode == INPUT)
+  {
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  }
+  else if(mode == OUTPUT)
+  {
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  }
+  else if(mode == INPUT_PULLUP)
+  {
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+  }
+  else if(mode == INPUT_PULLDOWN)
+  {
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+  }
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 
-//uint32_t* Pin2Addr(uint8_t pin)
-//{
-//  uint32_t *addr;
-//  uint8_t port, pin_num;
-//  port = (pin&0xf0) >> 4;
-//  pin_num =  pin&0x0f;
-//  addr = (uint32_t *)((GPIO_PIN_DATA_BASE+(0x20*(port))) + ((pin_num)<<2));
-//  return addr;
-//}
+  switch(port)
+  {
+    case 0:
+      GPIO_Init(GPIOA, &GPIO_InitStructure);
+      break;
+    case 1:
+      GPIO_Init(GPIOB, &GPIO_InitStructure);
+      break;
+    default:
+      break;
+  }
+}
 
-//void digitalWrite(uint8_t pin,int val)
-//{
-//  *(Pin2Addr(pin)) = val;
-//}
+void digitalWrite(uint8_t pin,int val)
+{
+  uint8_t port,pin_num;
+  uint16_t gpio_pin;
+  port = (pin&0xf0) >> 4;
+  pin_num = pin&0x0f;
+  gpio_pin = 1 << pin_num;
 
-//int digitalRead(uint8_t pin)
-//{
-//  uint8_t port, pin_num;
-//  port = (pin&0xf0) >> 4;
-//  pin_num =  pin&0x0f;
-//  return GPIO_PIN_ADDR(port,pin_num);
-//}
+  switch(port)
+  {
+    case 0:
+      if(val == HIGH)
+      {
+        GPIO_SetBits(GPIOA, gpio_pin);
+      }
+      else
+      {
+        GPIO_ResetBits(GPIOA, gpio_pin);
+      }
+      break;
+    case 1:
+      if(val == HIGH)
+      {
+        GPIO_SetBits(GPIOB, gpio_pin);
+      }
+      else
+      {
+        GPIO_ResetBits(GPIOB, gpio_pin);
+      }
+      break;
+    default:
+      break;
+  }
+}
+
+int digitalRead(uint8_t pin)
+{
+  uint8_t port, pin_num;
+  uint16_t gpio_pin;
+  uint16_t bitstatus = 0x00;
+  port = (pin & 0xf0) >> 4;
+  pin_num =  (pin & 0x0f);
+  gpio_pin = 1 << pin_num;
+  switch(port)
+  {
+    case 0:
+      bitstatus = GPIO_ReadInputDataBit(GPIOA, gpio_pin);
+      break;
+    case 1:
+      bitstatus = GPIO_ReadInputDataBit(GPIOB, gpio_pin);
+      break;
+    default:
+      break;
+  }
+  return bitstatus;
+}
 
 //int analogRead(uint8_t pin)
 //{

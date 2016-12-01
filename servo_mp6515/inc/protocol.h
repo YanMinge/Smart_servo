@@ -23,7 +23,8 @@
 #define CTL_SET_BAUD_RATE       0x13 // Set the bandrate
 #define CTL_CMD_TEST            0x14 // Just for test
 #define CTL_ERROR_CODE          0x15 // error code
-#define CTL_SET_CMD_MODE        0x16 // set the command mode
+
+#define CTL_ASSIGN_DEV_ID_2     0x16 // Assignment device ID 2
 #define CTL_DIGITAL_MESSAGE     0x18 // send data for a digital pin
 #define CTL_ANALOG_MESSAGE      0x19 // send data for an analog pin (or PWM)
 #define CTL_REPORT_DIGITAL      0x1a // enable digital input by port pair
@@ -130,6 +131,7 @@
 #define FIRMATA_DATA_MODE       0x00
 
 extern volatile uint8_t device_id;    // hardware ID, Uniqueness in a link.
+extern volatile uint8_t device_id_2;  //hardware ID, Uniqueness in a link.
 extern volatile uint8_t device_type;  // device type, Indicates the type of module, 0x00 indicates no external module
 extern volatile uint8_t command_mode; // Command mode.
 

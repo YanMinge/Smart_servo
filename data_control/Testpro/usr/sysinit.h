@@ -1,6 +1,13 @@
 #ifndef __SYSINIT_H__
 #define __SYSINIT_H__
 #include "stm32f0xx.h"
+#include "mygpio.h"
+
+//GPIO define
+#define RUN_LED  PB2
+#define GET_ON   PA15
+#define SW_LED   PA8
+#define SET_ON   PB5
 
 #define PI 3.1415926535897932384626433832795
 #define HALF_PI 1.5707963267948966192313216916398
@@ -32,3 +39,9 @@ typedef unsigned char           boolean; //!< Boolean.
 #define PLLCON_SETTING      CLK_PLLCON_50MHz_HXT
 #define PLL_CLOCK           50000000
 #endif /* __SYSINIT_H__ */
+
+extern void RCC_Configuration(void);
+extern void GPIO_Configuration(void);
+extern void NVIC_Configuration(void);
+extern void gpio_init(void);
+

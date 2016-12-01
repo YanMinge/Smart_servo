@@ -29,6 +29,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_it.h"
+#include "uart_printf.h"
+
 
 /** @addtogroup STM32F0xx_StdPeriph_Examples
   * @{
@@ -114,15 +116,24 @@ void SysTick_Handler(void)
   */
 void USART1_IRQHandler(void)
 {
+  volatile uint8_t inputData = 0xFF;
   if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
   {
     /* Read one byte from the receive data register */
-    aRxBuffer[0][RxCounter++] = USART_ReceiveData(USART1);
+    inputData = USART_ReceiveData(USART1);
 
-    if(RxCounter == BUFFER_SIZE)
+    if(Uart1RevBytes < BUFFER_SIZE)
     {
-      ReceiveState = 1;
-      RxCounter = 0;
+      /* Enqueue the character */
+      Uart1RecData[Uart1RevRtail] = inputData;
+      Uart1RevRtail = (Uart1RevRtail == (uint16_t)(BUFFER_SIZE - 1)) ? 0 : (Uart1RevRtail + 1);
+      Uart1RevBytes++;
+    }
+    else
+    { 
+      Uart1RevBytes = 0;
+      Uart1RevRtail = 0;
+      Uart1RevHead = 0;
     }
   }
 }
@@ -134,15 +145,24 @@ void USART1_IRQHandler(void)
   */
 void USART2_IRQHandler(void)
 {
+  volatile uint8_t inputData = 0xFF;
   if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
   {
     /* Read one byte from the receive data register */
-    aRxBuffer[1][RxCounter++] = USART_ReceiveData(USART2);
+    inputData = USART_ReceiveData(USART2);
 
-    if(RxCounter == BUFFER_SIZE)
+    if(Uart2RevBytes < BUFFER_SIZE)
     {
-      ReceiveState = 1;
-      RxCounter=0;
+      /* Enqueue the character */
+      Uart2RecData[Uart2RevRtail] = inputData;
+      Uart2RevRtail = (Uart2RevRtail == (uint16_t)(BUFFER_SIZE - 1)) ? 0 : (Uart2RevRtail + 1);
+      Uart2RevBytes++;
+    }
+    else
+    { 
+      Uart2RevBytes = 0;
+      Uart2RevRtail = 0;
+      Uart2RevHead = 0;
     }
   }
 }
@@ -154,40 +174,64 @@ void USART2_IRQHandler(void)
   */
 void USART3_6_IRQHandler(void)
 {
+  volatile uint8_t inputData = 0xFF;
   if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
   {
     /* Read one byte from the receive data register */
-    aRxBuffer[2][RxCounter++] = USART_ReceiveData(USART3);
-    
-    if(RxCounter == BUFFER_SIZE)
+    inputData = USART_ReceiveData(USART3);
+
+    if(Uart3RevBytes < BUFFER_SIZE)
     {
-      ReceiveState = 1;
-      RxCounter = 0;
+      /* Enqueue the character */
+      Uart3RecData[Uart3RevRtail] = inputData;
+      Uart3RevRtail = (Uart3RevRtail == (uint16_t)(BUFFER_SIZE - 1)) ? 0 : (Uart3RevRtail + 1);
+      Uart3RevBytes++;
+    }
+    else
+    { 
+      Uart3RevBytes = 0;
+      Uart3RevRtail = 0;
+      Uart3RevHead = 0;
     }
   }
 
   if(USART_GetITStatus(USART4, USART_IT_RXNE) != RESET)
   {
     /* Read one byte from the receive data register */
-    aRxBuffer[3][RxCounter++] = USART_ReceiveData(USART4);
-    
-    if(RxCounter == BUFFER_SIZE)
+    inputData = USART_ReceiveData(USART4);
+
+    if(Uart4RevBytes < BUFFER_SIZE)
     {
-      ReceiveState = 1;
-      RxCounter = 0;
+      /* Enqueue the character */
+      Uart4RecData[Uart4RevRtail] = inputData;
+      Uart4RevRtail = (Uart4RevRtail == (uint16_t)(BUFFER_SIZE - 1)) ? 0 : (Uart4RevRtail + 1);
+      Uart4RevBytes++;
+    }
+    else
+    { 
+      Uart4RevBytes = 0;
+      Uart4RevRtail = 0;
+      Uart4RevHead = 0;
     }
   }
 
   if(USART_GetITStatus(USART5, USART_IT_RXNE) != RESET)
   {
-      
     /* Read one byte from the receive data register */
-    aRxBuffer[4][RxCounter++] = USART_ReceiveData(USART5);
-    
-    if(RxCounter == BUFFER_SIZE)
-    {  
-      ReceiveState = 1;
-      RxCounter = 0;
+    inputData = USART_ReceiveData(USART5);
+
+    if(Uart5RevBytes < BUFFER_SIZE)
+    {
+      /* Enqueue the character */
+      Uart5RecData[Uart5RevRtail] = inputData;
+      Uart5RevRtail = (Uart5RevRtail == (uint16_t)(BUFFER_SIZE - 1)) ? 0 : (Uart5RevRtail + 1);
+      Uart5RevBytes++;
+    }
+    else
+    { 
+      Uart5RevBytes = 0;
+      Uart5RevRtail = 0;
+      Uart5RevHead = 0;
     }
   }
 }

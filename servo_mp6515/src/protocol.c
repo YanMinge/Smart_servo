@@ -37,11 +37,13 @@ volatile int16_t InputBytesRead = 0;
 volatile uint16_t Uart0Revhead  = 0;
 volatile uint16_t Uart0RevRtail  = 0;
 
-volatile uint8_t device_id = 0;              //hardware ID, Uniqueness in a link.
+volatile uint8_t device_id = 0;                //hardware ID, Uniqueness in a link.
+volatile uint8_t device_id_2 = 0;              //hardware ID, Uniqueness in a link.
+
 volatile uint8_t device_type = CUSTOM_TYPE;  //device type, Indicates the type of module, 0x00 indicates no external module
 volatile uint8_t command_mode = FIRMATA_DATA_MODE;    //G_CODE_MODE,FIRMATA_DATA_MODE
 
-char mVersion[10] = "20.01.008";   //第二位表示 命令模式。
+char mVersion[10] = "20.01.009";   //第二位表示 命令模式。
 
 union sysex_message sysex = {0};
 
@@ -351,6 +353,7 @@ static void system_reset_response(void *arg)
   mVersion[4] = command_mode+1+'0';
   samrt_servo_init();
   device_id = 0;
+  device_id_2 = 0;
   device_type = SMART_SERVO;
   uart_printf(UART0,"V%s\r\n",mVersion);
 }
@@ -382,6 +385,36 @@ static void shake_hand_response(void *arg)
   shake_hand_flag = true;
   blink_count = 0;
   SendErrorUart0(PROCESS_SUC);
+}
+
+static void assign_dev_id_2_response(void *arg)
+{
+  volatile uint8_t device_id_temp1 = sysex.val.value[0];
+  volatile uint8_t device_id_temp2 = sysex.val.value[1];
+  volatile uint8_t checksum;
+  if(((ALL_DEVICE + CTL_ASSIGN_DEV_ID_2 + device_id_temp1) & 0x7f) != device_id_temp2)
+  {
+    SendErrorUart0(WRONG_INPUT_DATA);
+    return;
+  }
+  device_id_2 = device_id_temp1 + 1;
+  //response mesaage to UART0
+  write_byte_uart0(START_SYSEX);
+  write_byte_uart0(device_id_2);
+  write_byte_uart0(CTL_ASSIGN_DEV_ID_2);
+  write_byte_uart0(device_type);
+  checksum = (device_id_2 + CTL_ASSIGN_DEV_ID_2 + device_type) & 0x7f;
+  write_byte_uart0(checksum);
+  write_byte_uart0(END_SYSEX);
+
+  //forward mesaage to UART1
+  write_byte_uart1(START_SYSEX);
+  write_byte_uart1(ALL_DEVICE);
+  write_byte_uart1(CTL_ASSIGN_DEV_ID_2);
+  write_byte_uart1(device_id_2);
+  checksum = (ALL_DEVICE + CTL_ASSIGN_DEV_ID_2 + device_id_2) & 0x7f;
+  write_byte_uart1(checksum);
+  write_byte_uart1(END_SYSEX);
 }
 
 static void write_digital_response(void *arg)
@@ -822,6 +855,7 @@ const Cmd_list_tab_type cmd_list_tab[]={
 {CTL_SHAKE_HANDS,NULL,shake_hand_response},
 {CTL_SET_BAUD_RATE,NULL,set_baud_rate},
 {CTL_CMD_TEST,NULL,cmd_test_response},
+{CTL_ASSIGN_DEV_ID_2,NULL,assign_dev_id_2_response},
 {CTL_DIGITAL_MESSAGE,NULL,write_digital_response},
 {CTL_ANALOG_MESSAGE,NULL,write_analog_response},
 {CTL_REPORT_DIGITAL,NULL,report_digital_response},
@@ -891,8 +925,13 @@ void processSysexMessage(void)
   {
     //CTL_ASSIGN_DEV_ID should processed one by one
     if((sysex.val.dev_id == ALL_DEVICE) &&
-       (sysex.val.srv_id != CTL_ASSIGN_DEV_ID))
+       (sysex.val.srv_id != CTL_ASSIGN_DEV_ID) &&
+       (sysex.val.srv_id != CTL_ASSIGN_DEV_ID_2))
     {
+      if(device_id == 0)
+      {
+        device_id = ALL_DEVICE;
+      }
       write_byte_uart1(START_SYSEX);
       flush_uart0_forward_buffer();
       write_byte_uart1(END_SYSEX);

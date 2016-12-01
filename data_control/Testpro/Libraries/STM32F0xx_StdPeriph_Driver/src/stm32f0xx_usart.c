@@ -80,8 +80,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_usart.h"
 #include "stm32f0xx_rcc.h"
-#include <stdio.h>
-#include <stdarg.h>
 
 /** @addtogroup STM32F0xx_StdPeriph_Driver
   * @{
@@ -194,7 +192,7 @@ void USART_DeInit(USART_TypeDef* USARTx)
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_USART3, ENABLE);
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_USART3, DISABLE);
   }
-    else if (USARTx == USART4)
+  else if (USARTx == USART4)
   {
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_USART4, ENABLE);
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_USART4, DISABLE);
@@ -204,7 +202,7 @@ void USART_DeInit(USART_TypeDef* USARTx)
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_USART5, ENABLE);
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_USART5, DISABLE);
   }
-    else if (USARTx == USART6)
+  else if (USARTx == USART6)
   {
     RCC_APB2PeriphResetCmd(RCC_APB2Periph_USART6, ENABLE);
     RCC_APB2PeriphResetCmd(RCC_APB2Periph_USART6, DISABLE);
@@ -971,25 +969,6 @@ uint16_t USART_ReceiveData(USART_TypeDef* USARTx)
   
   /* Receive Data */
   return (uint16_t)(USARTx->RDR & (uint16_t)0x01FF);
-}
-
-void send_string(USART_TypeDef* USARTx,char *str)
-{
-  while(*str)
-  {
-    USART_SendData(USARTx,(uint16_t)*str++);
-    while(USART_GetFlagStatus(USARTx, USART_FLAG_TC) == RESET);
-  }
-}
-
-void uart_printf(USART_TypeDef* USARTx,char *fmt,...)
-{
-  va_list ap;
-  char string[128];
-  va_start(ap,fmt);
-  vsprintf(string,fmt,ap);
-  send_string(USARTx,string);
-  va_end(ap);
 }
 
 /**

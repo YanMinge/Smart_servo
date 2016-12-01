@@ -1,2 +1,17 @@
-# Smart_servo
-this is code for smart servo.
+# 1. 文件说明 #
+## (1) data_control  ##
+  数据转换主板的程序，为1拖4的接口，便于舵机的布线。
+
+## (2) neurons_mini58 ##
+  磁编码器的数据转换板及磁编码模块的程序
+
+
+## (3) powerOn ##
+  按键小板的程序
+
+
+## (4) Robot_Arm_Protocol ##
+  测试用的上位机
+
+## (5) servo_mp6515 ##
+  智能舵机的主程序
