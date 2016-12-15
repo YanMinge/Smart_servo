@@ -17,6 +17,8 @@ extern bool uart2ParsingSysex;
 extern bool uart3ParsingSysex;
 extern bool uart4ParsingSysex;
 extern bool uart5ParsingSysex;
+extern bool uart1VersionSysex;
+
 
 extern int16_t Uart1SysexBytesRead;
 extern int16_t Uart2SysexBytesRead;

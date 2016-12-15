@@ -85,6 +85,7 @@ extern union sysex_message uart5_sysex;
 
 #define START_SYSEX             0xF0 // start a MIDI Sysex message
 #define END_SYSEX               0xF7 // end a MIDI Sysex message
+#define VERSION_READ_SYSEX      0xFF // read version Sysex message
 
 /* report error code */
 #define PROCESS_SUC             0x0F

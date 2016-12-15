@@ -425,9 +425,68 @@ void parse_uart1_recv_buffer(void)
         }
       }
     }
+    else if(true == uart1VersionSysex)
+    {
+      //normal data byte - add to buffer
+      uart1_sysex.storedInputData[Uart1SysexBytesRead] = inputData;
+      Uart1SysexBytesRead++;
+      if(Uart1SysexBytesRead == 5)
+      {
+        uart1VersionSysex = false;
+        Uart1SysexBytesRead = 0;
+        if((uart1_sysex.storedInputData[0] == 0x55) &&
+           (uart1_sysex.storedInputData[1] == 0x03) &&
+           (uart1_sysex.storedInputData[3] == 0x01) &&
+           (uart1_sysex.storedInputData[4] == 0x00))
+        {
+          devid_assigned = true;
+          if(servo_num[UART2] != 0)
+          {
+            write_byte_uart(UsartInstance[UART2],VERSION_READ_SYSEX);
+            write_byte_uart(UsartInstance[UART2],0x55);
+            write_byte_uart(UsartInstance[UART2],0x03);
+            write_byte_uart(UsartInstance[UART2],0x00);
+            write_byte_uart(UsartInstance[UART2],0x01);
+            write_byte_uart(UsartInstance[UART2],0x00); 
+          }
+          else if(servo_num[UART3] != 0)
+          {
+            write_byte_uart(UsartInstance[UART3],VERSION_READ_SYSEX);
+            write_byte_uart(UsartInstance[UART3],0x55);
+            write_byte_uart(UsartInstance[UART3],0x03);
+            write_byte_uart(UsartInstance[UART3],0x00);
+            write_byte_uart(UsartInstance[UART3],0x01);
+            write_byte_uart(UsartInstance[UART3],0x00); 
+          }
+          else if(servo_num[UART4] != 0)
+          {
+            write_byte_uart(UsartInstance[UART4],VERSION_READ_SYSEX);
+            write_byte_uart(UsartInstance[UART4],0x55);
+            write_byte_uart(UsartInstance[UART4],0x03);
+            write_byte_uart(UsartInstance[UART4],0x00);
+            write_byte_uart(UsartInstance[UART4],0x01);
+            write_byte_uart(UsartInstance[UART4],0x00); 
+          }
+          else if(servo_num[UART5] != 0)
+          {
+            write_byte_uart(UsartInstance[UART5],VERSION_READ_SYSEX);
+            write_byte_uart(UsartInstance[UART5],0x55);
+            write_byte_uart(UsartInstance[UART5],0x03);
+            write_byte_uart(UsartInstance[UART5],0x00);
+            write_byte_uart(UsartInstance[UART5],0x01);
+            write_byte_uart(UsartInstance[UART5],0x00); 
+          }
+        }
+      }
+    }
     else if(inputData == START_SYSEX)
     {
       uart1ParsingSysex = true;
+      Uart1SysexBytesRead = 0;
+    }
+    else if(inputData == VERSION_READ_SYSEX)
+    {
+      uart1VersionSysex = true;
       Uart1SysexBytesRead = 0;
     }
     Uart1RevHead = (Uart1RevHead == (int16_t)(BUFFER_SIZE - 1)) ? 0 : (Uart1RevHead + 1);

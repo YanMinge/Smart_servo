@@ -18,6 +18,8 @@ bool uart2ParsingSysex = false;
 bool uart3ParsingSysex = false;
 bool uart4ParsingSysex = false;
 bool uart5ParsingSysex = false;
+bool uart1VersionSysex = false;
+
 
 int16_t Uart1SysexBytesRead = 0;
 int16_t Uart2SysexBytesRead = 0;
