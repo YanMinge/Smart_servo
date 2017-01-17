@@ -3,7 +3,7 @@
 
 #include "Mini58Series.h"
 #include "sysinit.h"
-;
+
 extern volatile unsigned long system_time;
 extern volatile boolean g_int_flag;
 
@@ -16,7 +16,6 @@ void UART0_IRQHandler(void);
 void UART1_IRQHandler(void);
 void I2C1_IRQHandler(void);
 void GPIOP0P1_IRQHandler(void);
-void EINT1_IRQHandler(void);
 
 #endif
 

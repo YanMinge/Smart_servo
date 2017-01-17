@@ -1,7 +1,9 @@
 #include "MeNumericDisplay.h"
 #include "systime.h"
-#include "uart_printf.h"
+#include "string.h"
 #include "math.h"
+
+#define OFF_POSITION  sizeof(segcode) - 1
 
 /* 0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f*/
 /*  0-9 a-f dispaly code */
@@ -9,7 +11,7 @@
 /*unsigned  char  segcode[16]={0xC0,0xF3,0x89,0xA1,0xB2,0xA4,0x84,0xF1,0x80,0xA0,0x90,0x86,0xCC,0x83,0x8C,0x9C};*/
 
 // common positive.
-static unsigned  char  segcode[16]={0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90,0x88,0xBF,0xFF}; /* 0,1,2,3,4,5,6,7,8,9,-,none*/ 
+static unsigned  char  segcode[13]={0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90,0x88,0xBF,0xFF}; /* 0,1,2,3,4,5,6,7,8,9,a,-,none*/ 
 
 uint8_t display_buf[4] = {0, 0, 0, 0};
 uint8_t update_display_buf[4] = {0, 0, 0, 0};
@@ -71,8 +73,8 @@ void code_cut(uint8_t DispData[])
 
 static void seg_display(uint8_t value)
 {
-    uint8_t value_temp = value & 0x0f;
-    uint8_t bp_bit = value & 0x10;
+    uint8_t value_temp = value & 0x0f; //0~15;
+    uint8_t bp_bit = value & 0x10; // has point?
     uint8_t i,dis_bit;
     uint8_t dis_code = segcode[value_temp];
     for(i=0; i<8; i++)
@@ -176,6 +178,39 @@ void NumericDisplayFloat(float value)
     }
 	
     NumericDisplayBuf(disp);
+}
+
+void NumericDisplayStr(char * str)
+{
+    int i = 0;
+    int j = 0;
+    uint8_t str_to_num_buf[4] = {0};
+    if(str == NULL)
+    {
+        return;
+    }
+    for(i = 0; j < 4; i++)
+    {
+        if(str[i] == '\0')
+        {
+            str_to_num_buf[j] = OFF_POSITION;
+            j++;
+        }
+        else if(str[i] == '.')
+        {
+            str_to_num_buf[j-1] = (str_to_num_buf[j-1]| 0x10);
+        }
+        else if((str[i] >= '0')&&(str[i] <= '9'))
+        {
+            str_to_num_buf[j] = str[i] - '0';
+            j++;
+        }
+        else
+        {
+            return;
+        }
+    }
+    memcpy(update_display_buf, str_to_num_buf, sizeof(str_to_num_buf));
 }
 
 void NumericDisplayBuf(uint8_t DispData[])

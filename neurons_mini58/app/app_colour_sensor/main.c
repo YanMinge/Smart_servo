@@ -21,10 +21,19 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* Macro defines                                                                                           */
 /*---------------------------------------------------------------------------------------------------------*/
+#define FIRMWARE_VERSION            003
+
+#define INFRARED_DETECT_PIN         P1_5
+#define LED_PIN                     P0_4
+
 #define CTL_READ_CURRENT_VALUE      0x01
 #define REPORT_CURRENT_VALUE        0x01
 #define CTL_SET_REPORT_MODE         0x7F
-#define SAMPLE_PERIOD               50
+#define SAMPLE_PERIOD               180
+
+#define CLOSE_THRESHOLD             900
+#define LIGHT_ON_LED                pwm_write(LED_PIN, 1000, 100)
+#define LIGHT_OFF_LED               pwm_write(LED_PIN, 1000, 0)
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* Local variables                                                                                         */
@@ -34,13 +43,13 @@ static uint32_t s_offline_start_mills = 0; // used for period reporting sensonr 
 static uint32_t s_sample_start_mills = 0; // used for period sampling.
 static uint32_t s_report_period = DEFAULT_REPORT_PERIOD_ON_LINE;
 static struct colour_sensor_data s_colour_sensor_value, s_pre_colour_sensor_value;
-static uint32_t s_report_mode = REPORT_MODE_CYCLE ;
+static uint32_t s_report_mode = REPORT_MODE_DIFF ;
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
 volatile unsigned long system_time = 0;
-
+uint16_t g_firmware_version = FIRMWARE_VERSION;
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global Interface                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
@@ -145,11 +154,41 @@ void init_block(void)
 	
 void get_sensor_data(void)
 {
+    static uint8_t s_close_flag  = 0;
+    static uint8_t s_detect_count  = 0;
+    static uint8_t s_detected_count = 0;
+    
+    if(s_detect_count == 20)
+    {
+        if(s_detected_count > 15)
+        {
+            s_close_flag = 1;
+            LIGHT_ON_LED;
+        }
+        else
+        {
+            s_close_flag = 0;
+            LIGHT_OFF_LED;
+        }
+        s_detected_count = 0;
+        s_detect_count = 0;
+    }
+    uint16_t infrare_value = analogRead(INFRARED_DETECT_PIN);
+    if(infrare_value < CLOSE_THRESHOLD)
+    {
+        s_detected_count++;
+    }
+    s_detect_count++;
+    
 	uint32_t current_millis = millis();
 	if((current_millis - s_sample_start_mills)> SAMPLE_PERIOD)
 	{
 		s_sample_start_mills = current_millis;
-		s_colour_sensor_value = colour_sensor_read();
+        if(s_close_flag == 1)
+        {
+            s_colour_sensor_value = colour_sensor_read();
+            //uart_printf(UART0, "r_value:%d; g_value:%d; b_value:%d\n", s_colour_sensor_value.r_value, s_colour_sensor_value.g_value, s_colour_sensor_value.b_value);
+        }
 	}
 }
 
@@ -202,6 +241,7 @@ void sysex_process_online(void)
 	read_sysex_type(&block_type , &sub_type, ON_LINE);
 	if((block_type != g_block_type)|| (sub_type != g_block_sub_type))
 	{
+        send_sysex_error_code(WRONG_TYPE);
 		return;
 	}
 	
@@ -230,6 +270,10 @@ void sysex_process_online(void)
 			{
 				return;
 			}
+            if(s_report_period < 10)
+            {
+                s_report_period = 10;
+            }
 		}
 	}
 }

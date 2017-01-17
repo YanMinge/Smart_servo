@@ -20,8 +20,15 @@
 #include "string.h"
 #include "block_param.h"
 
-#define CMD_DRAW_BIT_MAP 0x01
-#define CMD_DRAW_BIT     0x02
+/*---------------------------------------------------------------------------------------------------------*/
+/* Micro defines                                                                                        */
+/*---------------------------------------------------------------------------------------------------------*/
+#define FIRMWARE_VERSION                    003
+#define CMD_DRAW_BIT_MAP                    0x01
+#define CMD_DRAW_BIT                        0x02
+#define CMD_DRAW_BIT_MAP_BY_COLOUR_BLOCK    0x03
+#define CMD_DRAW_ANIMATION_FRAME            0x04
+#define CMD_SHOW_ANIMATION                  0x05
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* local variables                                                                                        */
@@ -29,12 +36,17 @@
 volatile static uint8_t s_r_value;
 volatile static uint8_t s_g_value;
 volatile static uint8_t s_b_value;
+static uint8_t s_show_mode;
+static uint8_t s_cmd_type;
+static uint8_t s_pre_cmd_type;
+static uint32_t s_show_interval;
+
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
 volatile unsigned long system_time = 0;
 volatile uint8_t g_start_flag =1;
-
+uint16_t g_firmware_version = FIRMWARE_VERSION;
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global Interface                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
@@ -45,8 +57,8 @@ void sysex_process_offline(void);
 /*---------------------------------------------------------------------------------------------------------*/
 /* local Interface                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-void led_matrix_poll_led_request(void);
-
+static void led_matrix_poll_led_request(void);
+static void led_dinamic_show(void);
 /*---------------------------------------------------------------------------------------------------------*/
 /* MAIN function                                                                                           */
 /*---------------------------------------------------------------------------------------------------------*/
@@ -72,6 +84,7 @@ int main(void)
         flush_uart0_local_buffer();	
 		// led.
 		led_matrix_poll_led_request();
+        led_dinamic_show();
     }
 }
 
@@ -87,8 +100,10 @@ void init_block(void)
 
 void sysex_process_online(void)
 {
-	uint8_t block_type, sub_type, data_type, cmd_type;
+	uint8_t block_type, sub_type, data_type;
 	uint8_t led_matrix[8];
+    uint8_t led_colour_array[64];
+    uint8_t led_quantity;
 	int16_t r_value, g_value, b_value;
 	int i = 0;
 	
@@ -96,16 +111,17 @@ void sysex_process_online(void)
 	read_sysex_type(&block_type, &sub_type, ON_LINE);
 	if((block_type != g_block_type)||(sub_type != g_block_sub_type))
 	{
+        send_sysex_error_code(WRONG_TYPE);
 		return;
 	}
 	
 	// read command type.
 	data_type = BYTE_8;
-	if(read_next_sysex_data(&data_type, (void*)(&cmd_type), ON_LINE) == false)
+	if(read_next_sysex_data(&data_type, (void*)(&s_cmd_type), ON_LINE) == false)
 	{
 		return; 
 	}
-	switch(cmd_type)
+	switch(s_cmd_type)
 	{
 		case CMD_DRAW_BIT_MAP:
 			// read matrix value.
@@ -131,9 +147,13 @@ void sysex_process_online(void)
 			{
 				return;
 			}
-			MeColourLEDMatrix_DrawBitMap(led_matrix, r_value, g_value, b_value);
+			MeColourLEDMatrix_DrawBitMap(led_matrix, r_value, g_value, b_value);          
 		break;
 		case CMD_DRAW_BIT:
+            if(s_pre_cmd_type != s_cmd_type) // new animation, reset the frame.
+            {
+                led_matrix_clear();
+            }
 			data_type = BYTE_8;
 			uint8_t led_index;
 			if(read_next_sysex_data(&data_type, (void*)(&led_index), ON_LINE) == false)
@@ -153,10 +173,97 @@ void sysex_process_online(void)
 			{
 				return;
 			}
-			single_led_set(led_index, r_value, g_value, b_value);
+            if(led_index==0)
+            {
+                set_led_by_colour_block_clear(); 
+            }            
+            
+            single_led_set(led_index, r_value, g_value, b_value);
+        break;
+            
+        case CMD_DRAW_BIT_MAP_BY_COLOUR_BLOCK:
+            data_type = BYTE_8;
+            if(read_next_sysex_data(&data_type, (void*)(&s_show_mode), ON_LINE) == false)
+            {
+                return;
+            }
+            if(read_next_sysex_data(&data_type,  (void*)(&led_quantity), ON_LINE) == false)
+            {
+                return;
+            }
+            if(led_quantity > 64)
+            {
+                return;
+            }
+            for(int i = 0; i< led_quantity; i++)
+            {
+                if(read_next_sysex_data(&data_type, (void*)(&(led_colour_array[i])), ON_LINE) == false)
+                {
+                    return;
+                }
+            }
+            set_leds_by_colour_block(led_quantity, led_colour_array);
+        break;
+        case CMD_DRAW_ANIMATION_FRAME:
+            if(s_pre_cmd_type != s_cmd_type) // new animation, reset the frame.
+            {
+                animation_clear();
+            }
+            data_type = BYTE_8;
+            uint8_t frame_sequence;
+            if(read_next_sysex_data(&data_type, (void*)(&frame_sequence), ON_LINE) == false)
+            {
+                return;
+            }
+            if(read_next_sysex_data(&data_type,  (void*)(&led_quantity), ON_LINE) == false)
+            {
+                return;
+            }
+            if(led_quantity > 64)
+            {
+                return;
+            }
+            for(int i = 0; i< led_quantity; i++)
+            {
+                if(read_next_sysex_data(&data_type, (void*)(&(led_colour_array[i])), ON_LINE) == false)
+                {
+                    return;
+                }
+            }
+            set_animation_frame(frame_sequence, led_quantity, led_colour_array);
+        break;
+        case CMD_SHOW_ANIMATION:
+            data_type = BYTE_8;
+            uint8_t animatioin_speed;
+            if(read_next_sysex_data(&data_type, (void*)(&animatioin_speed), ON_LINE) == false)
+            {
+                return;
+            }
+        
+            if(read_next_sysex_data(&data_type, (void*)(&s_show_mode), ON_LINE) == false)
+            {
+                return;
+            }
+            switch(animatioin_speed)
+            {
+                case 0:
+                    s_show_interval = 1000; // 2s, change.
+                break;
+                case 1:
+                    s_show_interval = 500; // 1s, change.
+                break;
+                case 2:
+                    s_show_interval = 200; // 0.5s, change.
+                break;
+                default:
+                    s_show_interval = 500;
+                break;
+            }
+        break;
 		default:
 		break;
 	}
+    s_pre_cmd_type = s_cmd_type;
 }
 
 void sysex_process_offline(void)
@@ -215,10 +322,9 @@ void sysex_process_offline(void)
 	single_led_set(ALL_LED, r_value, g_value, b_value);
 }
 
-void led_matrix_poll_led_request(void)
+static void led_matrix_poll_led_request(void)
 {
-	// blink the led.
-	
+	// blink the led. 
 	if(g_start_flag)
 	{
 		static uint32_t previous_time = 0;
@@ -250,4 +356,24 @@ void led_matrix_poll_led_request(void)
 			s_count = 0;
 		}
 	}
+}
+
+static void led_dinamic_show(void)
+{
+    if((s_cmd_type == CMD_DRAW_BIT_MAP) ||(s_cmd_type == CMD_DRAW_BIT)) // no dinamic.
+    {
+        return;
+    }
+    else if(s_cmd_type == CMD_SHOW_ANIMATION) // cycle.
+    {
+        animation_show(s_show_mode, s_show_interval);
+    }
+    else if(s_cmd_type == CMD_DRAW_BIT_MAP_BY_COLOUR_BLOCK) // one time.
+    {
+        colour_block_show(s_show_mode); 
+    }
+    else // display the frame until the end.
+    {
+        colour_block_show(s_show_mode); 
+    }
 }

@@ -103,7 +103,7 @@ void TMR0_Init(uint32_t u32Freq)
     /* Start Timer counting */
     TIMER_Start(TIMER0);
 	
-	NVIC_SetPriority(TMR0_IRQn, 1);
+	NVIC_SetPriority(TMR0_IRQn, 2);
 
     /* Enable TMR0 Interrupt */
     NVIC_EnableIRQ(TMR0_IRQn);
@@ -197,6 +197,7 @@ void init_neuron_system(void)
 
 void UART_Function_Init(void)
 {
+    
     /* Enable Interrupt and install the call back function */
     UART_ENABLE_INT(UART0, (UART_INTEN_RDAIEN_Msk | UART_INTEN_RXTOIEN_Msk ));
     NVIC_EnableIRQ(UART0_IRQn);

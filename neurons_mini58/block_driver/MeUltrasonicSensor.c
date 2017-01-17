@@ -66,22 +66,22 @@ static void transmint8Puls(void)
 
 enum ULTRANSONIC_STATE poll_ultrasonic_state(void)
 {
+    uint32_t distance = 0;
 	if(s_ultransonic_state == ULTRANSONIC_ECHO_RECV)
 	{
 		count_end();
-		
-		s_distance = 0.017*s_echo_count/CyclesPerUs - 3.5; // 0.017us/cm, 3.5 is for calibration.
+		distance = 0.017*s_echo_count/CyclesPerUs;
+        distance = 0.017*s_echo_count/CyclesPerUs;
+        s_distance = constrain(distance,DISTANCE_MIN, DISTANCE_MAX);
 		s_ultransonic_state = ULTRANSONIC_OVER;
 	}
-	
 	else
 	{
 		uint32_t current_count = TIMER_GetCounter(TIMER1);
 		if(current_count > TIME_OUT_THRESHOLD) // 35ms, time out.
-		{
-			
+		{	
 			count_end();
-			s_distance = 0;
+			s_distance = DISTANCE_MAX;
 			s_ultransonic_state = ULTRANSONIC_OVER;
 		}
 	}

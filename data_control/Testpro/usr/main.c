@@ -96,7 +96,7 @@ int main(void)
   NVIC_Configuration();
 
   gpio_init();
-	
+
   power_state = POWER_OFF;
 
   uart_init(USART1,115200);
@@ -140,7 +140,7 @@ int main(void)
     {
       digitalWrite(RUN_LED, LOW);
     }
-		power_management();
+    power_management();
   }
 }
 
@@ -149,12 +149,12 @@ int main(void)
 //  uint8_t inputData = 0xFF;	
 //  while(Uart1SendHead != Uart1SendRtail)
 //  {
-//		inputData = Uart1SendData[Uart1SendHead];
+//    inputData = Uart1SendData[Uart1SendHead];
 //    while(USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
 //    USART_SendData(USART1,(uint16_t)inputData);
 //    Uart1SendHead = (Uart1SendHead == (BUFFER_SIZE - 1)) ? 0 : (Uart1SendHead + 1);
 //    Uart1SendBytes--;
-//	}
+//  }
 //}
 
 //void uart1_port_check_event_handle(void)
@@ -385,7 +385,7 @@ void uart_port_check(uint8_t uartId)
     detect_debounce_counter[uartId] = 0;
   }
   pre_servo_num[uartId] = cur_servo_num[uartId];
-	cur_servo_num[uartId] = 0;
+  cur_servo_num[uartId] = 0;
 }
 
 void parse_uart1_recv_buffer(void)
@@ -400,18 +400,18 @@ void parse_uart1_recv_buffer(void)
       {
         uart1ParsingSysex = false;
         //process fucntion
-				if(uart1_sysex.val.srv_id == CTL_ASSIGN_DEV_ID)
+        if(uart1_sysex.val.srv_id == CTL_ASSIGN_DEV_ID)
         {
-					devid_assigned = true;
+          devid_assigned = true;
           assign_dev_id_response(UART2);
           assign_dev_id_response(UART3);
           assign_dev_id_response(UART4);
           assign_dev_id_response(UART5);
-				}
-				else
+        }
+        else
         {
           assign_cmd_to_uart(uart1_sysex.val.dev_id);
-				}
+        }
       }
       else
       {
@@ -551,18 +551,18 @@ void assign_dev_id_response(uint8_t uartId)
     case UART2:
       deviceId = 0;
       break;
-    case UART3:
+    case UART4:
       deviceId = servo_num[UART2];
       break;
-    case UART4:
-      deviceId = servo_num[UART2] + servo_num[UART3];
+    case UART3:
+      deviceId = servo_num[UART2] + servo_num[UART4];
       break;
     case UART5:
       deviceId = servo_num[UART2] + servo_num[UART3] + servo_num[UART4];
       break;
     default:
       break;
-	}
+  }
   write_byte_uart(UsartInstance[uartId],START_SYSEX);
   write_byte_uart(UsartInstance[uartId],ALL_DEVICE);
   write_byte_uart(UsartInstance[uartId],CTL_ASSIGN_DEV_ID);
@@ -615,16 +615,7 @@ void assign_cmd_to_uart(uint8_t devId)
     }
     write_byte_uart(USART2,END_SYSEX);
   }
-  else if((devId > servo_num[UART2]) && (devId <= (servo_num[UART2] + servo_num[UART3])))
-  {
-    write_byte_uart(USART3,START_SYSEX);
-    for(transfer_byte = 0; transfer_byte <= Uart1SysexBytesRead; transfer_byte++)
-    {
-      write_byte_uart(USART3,uart1_sysex.storedInputData[transfer_byte]);
-    }
-    write_byte_uart(USART3,END_SYSEX);
-  }
-  else if((devId > (servo_num[UART2] + servo_num[UART3])) && (devId <= (servo_num[UART2] + servo_num[UART3] + servo_num[UART4])))
+  else if((devId > servo_num[UART2]) && (devId <= (servo_num[UART2] + servo_num[UART4])))
   {
     write_byte_uart(USART4,START_SYSEX);
     for(transfer_byte = 0; transfer_byte <= Uart1SysexBytesRead; transfer_byte++)
@@ -632,6 +623,15 @@ void assign_cmd_to_uart(uint8_t devId)
       write_byte_uart(USART4,uart1_sysex.storedInputData[transfer_byte]);
     }
     write_byte_uart(USART4,END_SYSEX);
+  }
+  else if((devId > (servo_num[UART2] + servo_num[UART4])) && (devId <= (servo_num[UART2] + servo_num[UART3] + servo_num[UART4])))
+  {
+    write_byte_uart(USART3,START_SYSEX);
+    for(transfer_byte = 0; transfer_byte <= Uart1SysexBytesRead; transfer_byte++)
+    {
+      write_byte_uart(USART3,uart1_sysex.storedInputData[transfer_byte]);
+    }
+    write_byte_uart(USART3,END_SYSEX);
   }
   else if(devId > (servo_num[UART2] + servo_num[UART3] + servo_num[UART4]))
   {
@@ -646,62 +646,67 @@ void assign_cmd_to_uart(uint8_t devId)
 
 void power_management(void)
 {
+//  uart_printf(USART1,"GET_ON:%d\r\n",digitalRead(GET_ON));
   if((digitalRead(GET_ON) == LOW) && (start_check == false))
   {
     start_check = true;
-		detect_key_start_time = millis();
-		detect_key_interval_time = millis();
-		detect_key_debounce_match_counter = 0;
+    detect_key_start_time = millis();
+    detect_key_interval_time = millis();
+    detect_key_debounce_match_counter = 0;
   }
   if((power_state == POWER_OFF) && (start_check == true))
   {
     if(millis() - detect_key_interval_time > 4)
     {
-			detect_key_interval_time = millis();
+      detect_key_interval_time = millis();
       if(digitalRead(GET_ON) == LOW)
       {
         detect_key_debounce_match_counter++;
-			}
-			if(millis() - detect_key_start_time > 100)
+      }  
+      if(millis() - detect_key_start_time > 100)
       {
         detect_key_start_time = millis();
-			  if(detect_key_debounce_match_counter > 15)
+        if(detect_key_debounce_match_counter > 15)
         {
           digitalWrite(SET_ON,HIGH);
           delay(100);
           digitalWrite(SW_LED,HIGH);
-					while(digitalRead(GET_ON) == LOW);
+          while(digitalRead(GET_ON) == LOW)
+          {
+//          uart_printf(USART1,"while true\r\n");
+          }
           power_state = POWER_ON;
-				}
+        }
         detect_key_debounce_match_counter = 0;
-			}
-		}
-	}
-	else if((power_state == POWER_ON) && (start_check == true))
+      }
+    }
+  }
+  else if((power_state == POWER_ON) && (start_check == true))
   {
     if(millis() - detect_key_interval_time > 4)
     {
-			detect_key_interval_time = millis();
+      detect_key_interval_time = millis();
       if(digitalRead(GET_ON) == LOW)
       {
         detect_key_debounce_match_counter++;
-			}
-			if(millis() - detect_key_start_time > 60)
+      }
+      if(millis() - detect_key_start_time > 60)
       {
         detect_key_start_time = millis();
-			  if(detect_key_debounce_match_counter > 10)
+        if(detect_key_debounce_match_counter > 10)
         {
-					while(digitalRead(GET_ON) == LOW)
+          while(digitalRead(GET_ON) == LOW)
           {
+//            uart_printf(USART1,"while true 2\r\n");
             digitalWrite(SET_ON,LOW);
             digitalWrite(SW_LED,LOW);
-					}
+          }
           power_state = POWER_OFF;
-					delay(100);
-				}
-				detect_key_debounce_match_counter = 0;
-			}
-		}
-	}
+          delay(100);
+        }
+        detect_key_debounce_match_counter = 0;
+      }
+    }
+  }
 }
 

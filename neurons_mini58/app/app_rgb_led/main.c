@@ -16,12 +16,13 @@
 #include "protocol.h"
 #include "systime.h"
 #include "Interrupt.h"
-#include "MeLedChain.h"
+#include "MeRgbLed.h"
 
 /*---------------------------------------------------------------------------------------------------------*/
-/* local variables                                                                                        */
+/* Micro defines                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-#define CTL_SET_RGB_VALUE 0x01
+#define FIRMWARE_VERSION       003
+#define CTL_SET_RGB_VALUE      0x01
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* local variables                                                                                        */
@@ -34,7 +35,7 @@ volatile static uint8_t s_b_value;
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
 volatile unsigned long system_time = 0;
-
+uint16_t g_firmware_version = FIRMWARE_VERSION;
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global Interface                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
@@ -83,10 +84,10 @@ void init_block(void)
 {
 	g_block_type = CLASS_DISPLAY;
 	g_block_sub_type = BLOCK_SINGLE_COLOUR_LED;
-	rgb_init(1, P0_1);
+	rgb_led_init();
 	uart0_recv_attach(sysex_process_online, sysex_process_offline);
 	
-	set_rgb_led(0, 0, 128);
+	set_rgb_led(0, 0, 128); // for the indicate led.
 }
 
 void sysex_process_online(void)
@@ -98,6 +99,7 @@ void sysex_process_online(void)
 	read_sysex_type(&block_type, &sub_type, ON_LINE);
 	if(block_type != g_block_type)
 	{
+        send_sysex_error_code(WRONG_TYPE);
 		return;
 	}
 	
@@ -139,8 +141,7 @@ void sysex_process_online(void)
 			s_b_value = b_value;
 		}
 	}
-	setColor(1, s_r_value, s_g_value, s_b_value);
-	rgb_show(1);
+    rgb_led_set(s_r_value, s_g_value, s_b_value);
 }
 
 void sysex_process_offline(void)
@@ -190,7 +191,5 @@ void sysex_process_offline(void)
 		s_g_value = g_value;
 		s_b_value = b_value;
 	}
-	
-	setColor(1, s_r_value, s_g_value, s_b_value);
-	rgb_show(1);
+	rgb_led_set(s_r_value, s_g_value, s_b_value);
 }

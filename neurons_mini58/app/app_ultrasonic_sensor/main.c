@@ -21,8 +21,7 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* Macro defines                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-#define  DISTANCE_MIN     		    2
-#define  DISTANCE_MAX     		    400
+#define  FIRMWARE_VERSION           003
 #define  SAMPLE_INTERVAL	  	    50
 
 #define  CTL_READ_CURRENT_VALUE     0x01
@@ -36,13 +35,14 @@ static uint32_t s_online_start_mills = 0;
 static uint32_t s_offline_start_mills = 0;
 static uint32_t s_sample_start_millis = 0;
 static uint32_t s_report_period = DEFAULT_REPORT_PERIOD_ON_LINE;
-static uint8_t  s_report_mode = REPORT_MODE_CYCLE;
+static uint8_t  s_report_mode = REPORT_MODE_DIFF;
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
 volatile float g_measure_distance;
 volatile float g_pre_measure_distance;
 volatile unsigned long system_time = 0;
+uint16_t g_firmware_version = FIRMWARE_VERSION;
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global Interface                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
@@ -95,18 +95,16 @@ int main(void)
 					s_online_start_mills = currentMillis;
 					send_sensor_report_online();
 				}
-				else if(s_report_mode == REPORT_MODE_DIFF)
+            }
+            else if(s_report_mode == REPORT_MODE_DIFF)
+            {
+				if(abs(g_measure_distance - g_pre_measure_distance) > 0.1)
 				{
-					if(abs(g_measure_distance - g_pre_measure_distance) > 0.1)
-					{
-						g_pre_measure_distance = g_measure_distance;
-						send_sensor_report_online();
-					}
+                    g_pre_measure_distance = g_measure_distance;
+					send_sensor_report_online();
 				}
-					
 			}
 		}
-		
 		// off line.
 		else if(g_block_no == 0)
 		{
@@ -167,7 +165,7 @@ void send_sensor_report_offline(void)
 	init_sysex_to_send(g_block_type, g_block_sub_type, OFF_LINE);
 	add_sysex_data(FLOAT_40, (void*)(&g_measure_distance), OFF_LINE);
 	int32_t temp_value = (int32_t)g_measure_distance;
-	int16_t uniform_value =  real_convert_to_uinform(g_measure_distance, DISTANCE_MIN, DISTANCE_MAX);
+	int16_t uniform_value =  UNIFORM_MAX - real_convert_to_uinform(g_measure_distance, DISTANCE_MIN, DISTANCE_MAX);
 	add_sysex_data(UNIFORM_16, &uniform_value, OFF_LINE);
 	flush_sysex_to_send(OFF_LINE);
 }
@@ -210,6 +208,10 @@ void sysex_process_online(void)
 			{
 				return;
 			}
+            if(s_report_period < 10)
+            {
+                s_report_period = 10;
+            }
 		}
 	}
 }

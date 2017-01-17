@@ -1,16 +1,10 @@
 #include "Interrupt.h"
 #include "protocol.h"
-#include "MeInfraredReceiver.h"
-#include "MeUltrasonicSensor.h"
 
 volatile boolean g_int_flag = 0;
 
 I2C_FUNC s_I2C0HandlerFn = NULL;
 volatile I2C_FUNC s_I2C1HandlerFn = NULL;
-
-static void Uart0_Handle(void);
-static void Uart1_Handle(void);
-
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* Interrupt handler entry                                                                                 */
@@ -52,118 +46,6 @@ void TMR0_IRQHandler(void)
  */
 void UART0_IRQHandler(void)
 {
-    Uart0_Handle();
-}
-
-/**
- * @brief       UART1 IRQ Handler
- *
- * @param       None
- *
- * @return      None
- *
- * @details     ISR to handle UART Channel 1 interrupt event
- */
-void UART1_IRQHandler(void)
-{
-    Uart1_Handle();
-}
-
-
-
-
-/*---------------------------------------------------------------------------------------------------------*/
-/*  GPIO IRQ                                                                                               */
-/*---------------------------------------------------------------------------------------------------------*/
-/* P5.2 IRQ Handler */
-void EINT1_IRQHandler(void)
-{
-#ifdef D_INFRARED_RECEIVER
-	static long s_pulse_width_10us = 0;
-	static int s_recv_bit_index = 0;
-	
-    /* To check if P5.2 interrupt occurred */
-    if(GPIO_GET_INT_FLAG(P5, BIT2))
-    {
-         /* Clear P2.3 interrupt flag */
-         GPIO_CLR_INT_FLAG(P5, BIT2);
-         if(g_ir_state == IR_READY)
-		 {
-			 if(P52 == 0)
-			 {
-				 s_pulse_width_10us = system_time;
-			 }
-			 else
-			 {
-				 s_pulse_width_10us = system_time - s_pulse_width_10us;
-				 if(s_pulse_width_10us > 800 && s_pulse_width_10us < 1000)
-				 {
-					 g_ir_state = IR_9000;
-					 s_pulse_width_10us = system_time;
-				 }
-			 }
-		 }
-		 else if(g_ir_state == IR_9000)
-		 {
-			 if(P52 == 0)
-			 {
-				 s_pulse_width_10us = system_time - s_pulse_width_10us;
-				 if(s_pulse_width_10us > 350 && s_pulse_width_10us < 550)
-				 {
-					 g_ir_state = IR_FRAME_START;
-				 }
-				 else if(s_pulse_width_10us > 150 && s_pulse_width_10us < 300)
-				 {
-					 g_ir_state = IR_FRAME_REPEAT;
-				 }
-				 else
-				 {
-					 g_ir_state = IR_ERROR;
-					 g_test_time = s_pulse_width_10us;
-				 }
-			 }
-		 }
-		 else if(g_ir_state == IR_FRAME_START)
-		 {
-			 if(P52 == 1)
-			 {
-				 s_pulse_width_10us = system_time;
-			 }
-			 else
-			 {
-				 s_pulse_width_10us = system_time - s_pulse_width_10us;
-				 ir_recv_bit[s_recv_bit_index++] = s_pulse_width_10us;
-				 if(s_recv_bit_index == 32)
-				 {
-					 g_ir_state = IR_FRAME_END;
-					 s_recv_bit_index = 0;
-				 }
-			 }
-		 }
-	}		
-    else
-    {
-        /* Un-expected interrupt. Just clear all PORT2, PORT3 and PORT4 interrupts */
-		P1->INTSRC = P1->INTSRC;
-        P2->INTSRC = P2->INTSRC;
-        P3->INTSRC = P3->INTSRC;
-        P4->INTSRC = P4->INTSRC;
-	}
-	
-#endif
-}
-
-void EINT0_IRQHandler(void)
-{
-    
-}
-
-
-/*---------------------------------------------------------------------------------------------------------*/
-/* UART0 Callback function                                                                                 */
-/*---------------------------------------------------------------------------------------------------------*/
-static void Uart0_Handle(void)
-{
     uint8_t inputData = 0xFF;
     uint32_t u32IntSts = UART0->INTSTS;
 
@@ -174,7 +56,7 @@ static void Uart0_Handle(void)
         {
 			
             inputData = UART_READ(UART0);
-			uint16_t BufferStoredData = Uart0RecvBufferPushBytes - Uart0RecvBufferPopBytes;
+            uint16_t BufferStoredData = Uart0RecvBufferPushBytes - Uart0RecvBufferPopBytes;
             if(BufferStoredData < UART0_REV_BUF_SIZE)
             {
                 /* Enqueue the character */
@@ -187,10 +69,16 @@ static void Uart0_Handle(void)
     }
 }
 
-/*---------------------------------------------------------------------------------------------------------*/
-/* UART1 Callback function                                                                                 */
-/*---------------------------------------------------------------------------------------------------------*/
-static void Uart1_Handle(void)
+/**
+ * @brief       UART1 IRQ Handler
+ *
+ * @param       None
+ *
+ * @return      None
+ *
+ * @details     ISR to handle UART Channel 1 interrupt event
+ */
+void UART1_IRQHandler(void)
 {
     uint8_t inputData = 0xFF;
     uint32_t u32IntSts = UART1->INTSTS;

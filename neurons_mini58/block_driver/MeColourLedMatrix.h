@@ -18,8 +18,15 @@ extern volatile uint32_t wSPI_Send_Pointer;
 #define __LED_SetShutDownPinLow			digitalWrite(SDB_PIN, 0);
 #define __LED_SetShutDownPinHigh		digitalWrite(SDB_PIN, 1);
 #define __SPI0_SET_SEL1                 digitalWrite(COLOUR_MATRIX_CS_PIN, 1);
-#define __SPI0_CLR_SEL1					digitalWrite(COLOUR_MATRIX_CS_PIN, 0);		
-	
+#define __SPI0_CLR_SEL1					digitalWrite(COLOUR_MATRIX_CS_PIN, 0);
+
+struct rgb_value
+{ 
+  uint8_t r; 
+  uint8_t g; 
+  uint8_t b; 
+};
+
 void led_colour_matrix_init(void);
 
 /*****************************************************************************
@@ -37,6 +44,19 @@ void single_led_set(uint8_t index, uint8_t r_value, uint8_t g_value, uint8_t b_v
 
 void MeColourLEDMatrix_DrawBitMap(uint8_t led_matrix[], uint8_t r_value, uint8_t g_value, uint8_t b_value);
 
+void led_matrix_clear(void);
+
 void MeColourLEDMatrix_setBreath(uint8_t breath_set);
+
+void set_leds_by_colour_block(uint8_t led_quantity, uint8_t* led_array);
+
+void set_animation_frame(uint8_t sequence, uint8_t led_quantity, uint8_t* led_array);
+
+void colour_block_show(uint8_t mode);
+
+void animation_show(uint8_t mode, uint32_t interval);
+
+void animation_clear(void);
 	
+void set_led_by_colour_block_clear(void);    
 #endif

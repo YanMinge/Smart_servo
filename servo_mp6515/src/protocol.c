@@ -43,7 +43,7 @@ volatile uint8_t device_id_2 = 0;              //hardware ID, Uniqueness in a li
 volatile uint8_t device_type = CUSTOM_TYPE;  //device type, Indicates the type of module, 0x00 indicates no external module
 volatile uint8_t command_mode = FIRMATA_DATA_MODE;    //G_CODE_MODE,FIRMATA_DATA_MODE
 
-char mVersion[10] = "20.01.009";   //第二位表示 命令模式。
+char mVersion[10] = "20.01.010";   //第二位表示 命令模式。
 
 union sysex_message sysex = {0};
 
@@ -1782,21 +1782,23 @@ static void cmd_set_angle_init(char *cmd)
       speed = atof(str+1);
     }
   }
+
   if((speed > SMART_SERVO_PER_SPPED_MAX) || (speed < -SMART_SERVO_PER_SPPED_MAX))
   {
     speed = (float)SMART_SERVO_PER_SPPED_MAX;
   }
+
   if(init_mode == 0)
   {
     smart_servo_cur_pos = smart_servo_cur_pos % 4096;
-	if((abs(smart_servo_cur_pos) > 2048) && (smart_servo_cur_pos > 0))
-	{
-	  smart_servo_cur_pos = smart_servo_cur_pos - 4096;
-	}
-	else if((abs(smart_servo_cur_pos) > 2048) && (smart_servo_cur_pos < 0))
-	{
-	  smart_servo_cur_pos = smart_servo_cur_pos + 4096;
-	}
+    if((abs(smart_servo_cur_pos) > 2048) && (smart_servo_cur_pos > 0))
+    {
+	    smart_servo_cur_pos = smart_servo_cur_pos - 4096;
+    }
+    else if((abs(smart_servo_cur_pos) > 2048) && (smart_servo_cur_pos < 0))
+    {
+      smart_servo_cur_pos = smart_servo_cur_pos + 4096;
+    }
     smart_servo_circular_turn_count = 0;
     pre_pos = 0;
   }

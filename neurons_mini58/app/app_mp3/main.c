@@ -19,24 +19,37 @@
 #include "MeMp3.h"
 #include "MeSoftSerial.h"
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* Micro defines                                                                                        */
+/*---------------------------------------------------------------------------------------------------------*/
+#define FIRMWARE_VERSION            002
+#define SHORT_PRESS_BOUND           8
+#define LONG_PRSS_BOUND             12
 
-/* local variables */
+/*---------------------------------------------------------------------------------------------------------*/
+/* local variables                                                                                        */
+/*---------------------------------------------------------------------------------------------------------*/
 volatile static enum CMD_TYPE s_cmd_type;
 volatile static uint8_t s_music_no = 0;
-volatile static int8_t 	s_mp3_volume = 0;
+volatile static enum PLAY_MODE s_play_mode;
+volatile static uint8_t s_volume_operation;
 volatile static uint8_t s_key3_long_or_short_count = 0;
 volatile static uint8_t s_key4_long_or_short_count = 0;
 volatile static uint8_t s_cmd_flag = 0;
 static enum MP3_KEY_CONTROL_STATE s_mp3_state = STATE_NO_PRESS;
+static uint8_t s_vibrate_flag = 0;
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-unsigned long key_debounced_time = 0;
+uint32_t key_debounced_time = 0;
+uint32_t s_vibrate_start_time = 0;
 int key_debounced_count = 0;
 int key_match_count = 0;
 int key_debounced_value = 0;
- volatile unsigned long system_time = 0;
+int pre_key_debounced_value = 0;
+uint16_t g_firmware_version = FIRMWARE_VERSION;
+volatile unsigned long system_time = 0;
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global Interface                                                                                        */
@@ -75,7 +88,7 @@ int main(void)
     {
 		poll_command_from_host();	
 		poll_key_status();
-		poll_led_request();
+		//poll_led_request();
 	}	
 }
 
@@ -86,7 +99,7 @@ void init_block(void)
 	mp3_init();
 	uart0_recv_attach(sysex_process_online, sysex_process_offline);
 	
-	set_rgb_led(0, 0, 128);
+	//set_rgb_led(0, 0, 128);
 }
 void task_receive_data_process(void)
 {
@@ -97,16 +110,34 @@ void task_receive_data_process(void)
 
 void poll_key_status(void)
 {
-	unsigned long current_time;
+    uint8_t volume_value;
+	uint32_t current_time;
     int key_temp_value = 0;
+    
+    if(s_vibrate_flag == 1)
+    {
+        digitalWrite(MOTOR_CTL_PIN, 1);
+    }
+    else
+    {
+        digitalWrite(MOTOR_CTL_PIN, 0);
+    }
     current_time = millis();
-    if (current_time - key_debounced_time > 3)
+    if((current_time - s_vibrate_start_time) > 200)
+    {
+        if(s_vibrate_flag == 1)
+        {
+            s_vibrate_flag = 0;
+        }
+    }
+    current_time = millis();
+    if (current_time - key_debounced_time > 2)
     {
         key_debounced_time = current_time;
-        key_temp_value = !digitalRead(FUNCTION_KEY_1);
-		key_temp_value |= (!digitalRead(FUNCTION_KEY_2))<<1;
-		key_temp_value |= (!digitalRead(FUNCTION_KEY_3))<<2;
-		key_temp_value |= (!digitalRead(FUNCTION_KEY_4))<<3;
+        key_temp_value =  digitalRead(FUNCTION_KEY_1);
+		key_temp_value |= (digitalRead(FUNCTION_KEY_2))<<1;
+		key_temp_value |= (digitalRead(FUNCTION_KEY_3))<<2;
+		key_temp_value |= (digitalRead(FUNCTION_KEY_4))<<3;
         if(key_debounced_count == 0)
         {
             key_debounced_value = key_temp_value;
@@ -117,13 +148,64 @@ void poll_key_status(void)
         }
         key_debounced_count ++;
     }
-
-    if(key_debounced_count == 30)
+    if(key_debounced_count == 15)
     {
         key_debounced_count = 0;
-        if(key_match_count > 20)
+        if(key_match_count > 8)
         {
 			key_match_count = 0;
+//            if(key_debounced_value == 0x01)
+//            {
+//                digitalWrite(KEY1_LED_PIN, 0);
+//            }
+//            else
+//            {
+//                digitalWrite(KEY1_LED_PIN, 1);
+//            }
+//            if((key_debounced_value&0x02) == 0x02)
+//            {
+//                digitalWrite(KEY2_LED_PIN, 1);
+//                
+//            }
+//            else
+//            {
+//                 digitalWrite(KEY2_LED_PIN, 0);
+//            }
+//            if((key_debounced_value&0x04) == 0x04)
+//            {
+//                digitalWrite(KEY3_LED_PIN, 1);
+//            }
+//            else
+//            {
+//                 digitalWrite(KEY3_LED_PIN, 0);
+//            }
+//            if((key_debounced_value&0x08) == 0x08)
+//            {
+//                digitalWrite(KEY4_LED_PIN, 1);
+//            }
+//            else
+//            {
+//                 digitalWrite(KEY4_LED_PIN, 0);
+//            }
+           
+            
+            
+            // some key pressed.
+            if(key_debounced_value != pre_key_debounced_value)
+            {
+                pre_key_debounced_value = key_debounced_value;
+                if((key_debounced_value&0x0f) != 0)
+                {
+                    // not sustaining pressed.
+                    if(s_vibrate_flag != 1)
+                    {
+                        s_vibrate_start_time = millis();
+                        s_vibrate_flag = 1;
+                    }
+                
+                }
+            }
+            
 			switch(s_mp3_state)
 			{
 				case STATE_NO_PRESS:
@@ -178,7 +260,7 @@ void poll_key_status(void)
 					switch(key_debounced_value&0x04)
 					{
 						case 0:
-							if(s_key3_long_or_short_count > 0 && s_key3_long_or_short_count < 4) // short press release.
+							if(s_key3_long_or_short_count > 0 && s_key3_long_or_short_count < SHORT_PRESS_BOUND) // short press release.
 							{
 								s_key3_long_or_short_count = 0;
 								s_mp3_state = STATE_NO_PRESS;
@@ -191,15 +273,11 @@ void poll_key_status(void)
 							}
 						break;
 						case 0x04:
-							if(s_key3_long_or_short_count > 8)
+							if(s_key3_long_or_short_count > LONG_PRSS_BOUND)
 							{
-								s_mp3_volume += 4;
-								if(s_mp3_volume > 31) // volume range 0-31.
-								{
-									s_mp3_volume = 31 ;
-								}
-								
-								mp3_set_volume(s_mp3_volume);
+                                volume_value = mp3_get_current_volume();
+								volume_value += 4;
+								mp3_set_volume(volume_value);
 								s_key3_long_or_short_count = 5; // no set to 0, for distinguish with short release when realease.
 							}
 							else
@@ -215,7 +293,7 @@ void poll_key_status(void)
 					switch(key_debounced_value&0x08)
 					{
 						case 0:
-							if(s_key4_long_or_short_count > 0 && s_key4_long_or_short_count < 4)
+							if(s_key4_long_or_short_count > 0 && s_key4_long_or_short_count < SHORT_PRESS_BOUND)
 							{
 								s_key4_long_or_short_count = 0;
 								s_mp3_state = STATE_NO_PRESS;
@@ -228,14 +306,18 @@ void poll_key_status(void)
 							}
 						break;
 						case 0x08:
-							if(s_key4_long_or_short_count > 8)
+							if(s_key4_long_or_short_count > LONG_PRSS_BOUND)
 							{
-								s_mp3_volume -=4;
-								if(s_mp3_volume < 0)
+                                volume_value = mp3_get_current_volume();
+								if(volume_value < 4)
 								{
-									s_mp3_volume = 0;
+									volume_value = 0;
 								}
-								mp3_set_volume(s_mp3_volume);
+                                else
+                                {
+                                    volume_value -=4;
+                                }
+								mp3_set_volume(volume_value);
 								s_key4_long_or_short_count = 5; // no set to 0, for distinguish with short release when realease.
 							}
 							else
@@ -263,6 +345,8 @@ void poll_key_status(void)
 
 void poll_command_from_host(void)
 {
+    uint8_t volume_value;
+    
 	if(s_cmd_flag == 0)
 	{
 		return;
@@ -273,9 +357,33 @@ void poll_command_from_host(void)
 		case MP3_PLAY:
 			mp3_play_music(s_music_no);
 			break;
-		case MP3_DELETE :
+		case MP3_DELETE:
 			mp3_delete_music(s_music_no);
 			break;
+        case MP3_SET_PLAY_MODE:
+            mp3_set_play_mode(s_play_mode);
+            break;
+        case MP3_SET_VOLUME:
+            if(s_volume_operation == 0) // decrease volume.
+            {
+                volume_value = mp3_get_current_volume();
+                if(volume_value < 4)
+                {
+                    volume_value = 0;
+				}
+                else
+                {
+                    volume_value -=4;
+                }
+				mp3_set_volume(volume_value);
+            }
+            else if(s_volume_operation == 1)// increase volume.
+            {
+                volume_value = mp3_get_current_volume();
+                volume_value += 4;
+                mp3_set_volume(volume_value);
+            }
+            break;
 		default:
 			mp3_send_cmd(s_cmd_type);
 			break;
@@ -293,6 +401,7 @@ void sysex_process_online(void)
 	read_sysex_type(&block_type, &sub_type, ON_LINE);
 	if((block_type != g_block_type)||(sub_type != g_block_sub_type)) // type error.
 	{
+        send_sysex_error_code(WRONG_TYPE);
 		return;
 	}
 	
@@ -310,12 +419,23 @@ void sysex_process_online(void)
 				return;
 			}
 			break;
-		case MP3_DELETE :
+		case MP3_DELETE:
 			if(read_next_sysex_data(&data_type, (void*)(&s_music_no), ON_LINE) == false)
 			{
 				return;
 			}
 			break;
+        case MP3_SET_PLAY_MODE:
+            if(read_next_sysex_data(&data_type, (void*)(&s_play_mode), ON_LINE) == false)
+			{
+				return;
+			}
+            break;
+        case MP3_SET_VOLUME:
+            if(read_next_sysex_data(&data_type, (void*)(&s_volume_operation), ON_LINE) == false)
+			{
+				return;
+			}
 		default:
 			break;
 	}

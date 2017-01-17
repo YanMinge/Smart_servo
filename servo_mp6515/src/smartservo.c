@@ -76,6 +76,10 @@ void samrt_servo_init(void)
   smart_servo_led(0,0,255);
 
   smart_servo_cur_pos = adc_get_position_value();
+  if(smart_servo_cur_pos > 2048)
+  {
+    smart_servo_cur_pos = smart_servo_cur_pos - 4096;
+  }
   pre_pos = smart_servo_cur_pos;
   smart_servo_target_pos = smart_servo_cur_pos;
   filter_pos = smart_servo_cur_pos;
@@ -85,12 +89,12 @@ void samrt_servo_init(void)
   protect_flag = false;
 
   PID_pos.P = 1.3;  //1.3    //2.0
-  PID_pos.I = 0.6;  //0.6   //0.75
+  PID_pos.I = 0.6;  //0.6    //0.75
   PID_pos.D = 1.5;
   PID_pos.Setpoint = smart_servo_target_pos;
   PID_pos.Integral = 0;
 
-  PID_speed.P = 3.2;
+  PID_speed.P = 4.6;        //3.2
   PID_speed.I = 0;
   PID_speed.D = 0;
   PID_speed.Setpoint = smart_servo_target_speed;
@@ -162,12 +166,12 @@ void smart_servo_break(boolean status)
 //    pwm_write(SMART_SERVO_PW1,0,0,255);
 //    pwm_write(SMART_SERVO_PW2,0,0,255);
     digitalWrite(SMART_SERVO_SLEEP,0);
-	release_state_flag = true;
+    release_state_flag = true;
   }
   else
   {
     digitalWrite(SMART_SERVO_SLEEP,1);
-	release_state_flag = false;
+    release_state_flag = false;
     smart_servo_cur_pos = adc_get_position_value();
     pre_pos = smart_servo_cur_pos;
     smart_servo_target_pos = smart_servo_cur_pos;
@@ -390,6 +394,7 @@ int16_t pid_position_to_pwm(void)
   {
     pos_error = smart_servo_target_pos - smart_servo_cur_pos;
     smart_servo_output = (255.0/SMART_SERVO_PER_SPPED_MAX)* smart_servo_distance_togo()/4.0;
+//    uart_printf(UART0,"pos_error:%d",pos_error);
     if(abs(pos_error) > SMART_SERVO_POS_DEADBAND)
     {
       if(pos_error > 0)

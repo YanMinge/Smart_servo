@@ -201,6 +201,14 @@ void pwm_write(int pin,int fq, uint8_t duty)
             PWM_ConfigOutputChannel(PWM, PWM_CH3, fq, duty);       //Set PWM frequence and duty.
 			PWM->CTL |= PWM_CTL_CNTEN3_Msk;
             break;
+        case 0x26:
+			CLK->CLKSEL1 = (CLK->CLKSEL1 & (~CLK_CLKSEL2_PWMCH45SEL_Msk))| CLK_CLKSEL2_PWMCH45SEL_HCLK;
+            CLK_EnableModuleClock(PWMCH45_MODULE);        //enable the clock
+            PWM->POEN |= PWM_POEN_POEN4_Msk;                 //Enable PWM Output
+            SYS->P2_MFP |= SYS_MFP_P26_PWM0_CH4;               //Set P2 multi-function pins for PWM Channel-3
+            PWM_ConfigOutputChannel(PWM, PWM_CH4, fq, duty);       //Set PWM frequence and duty.
+			PWM->CTL |= PWM_CTL_CNTEN4_Msk;
+            break;
 		case 0x05:
 			CLK->CLKSEL1 = (CLK->CLKSEL1 & (~CLK_CLKSEL2_PWMCH45SEL_Msk))| CLK_CLKSEL2_PWMCH45SEL_HCLK;
             CLK_EnableModuleClock(PWMCH45_MODULE);        //enable the clock

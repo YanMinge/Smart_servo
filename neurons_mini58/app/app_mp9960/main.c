@@ -133,7 +133,7 @@ int main(void)
 void init_block(void)
 {
   g_block_type = CLASS_CONTROL;
-  g_block_sub_type = ANGLE_SENSOR;
+  g_block_sub_type = BLOCK_ANGLE_SENSOR;
 
   CLK_EnableModuleClock(SPI0_MODULE);
   CLK_SetModuleClock(SPI0_MODULE,CLK_CLKSEL1_SPISEL_XTAL,0);
@@ -205,76 +205,76 @@ void get_sensor_data(void)
 
 void send_sensor_report_online(void)
 {
-	uint8_t report_type = REPORT_CURRENT_VALUE; 
-	init_sysex_to_send(g_block_type, g_block_sub_type, ON_LINE);
-	add_sysex_data(BYTE_8, (void*)(&report_type), ON_LINE);
-	add_sysex_data(LONG_40, (void*)(&s_angle_value), ON_LINE);
-	flush_sysex_to_send(ON_LINE);
+  uint8_t report_type = REPORT_CURRENT_VALUE; 
+  init_sysex_to_send(g_block_type, g_block_sub_type, ON_LINE);
+  add_sysex_data(BYTE_8, (void*)(&report_type), ON_LINE);
+  add_sysex_data(LONG_40, (void*)(&s_angle_value), ON_LINE);
+  flush_sysex_to_send(ON_LINE);
 }
 
 void send_sensor_report_offline(void)
 {
-	init_sysex_to_send(g_block_type, g_block_sub_type, OFF_LINE);
-	add_sysex_data(LONG_40, (void*)(&s_angle_value), OFF_LINE);
-	int16_t uniform_value = line_map(s_angle_value, UNIFORM_MIN, UNIFORM_MAX, 0, 4095);
-	add_sysex_data(UNIFORM_16, &uniform_value, OFF_LINE);
-	flush_sysex_to_send(OFF_LINE);
+  init_sysex_to_send(g_block_type, g_block_sub_type, OFF_LINE);
+  add_sysex_data(LONG_40, (void*)(&s_angle_value), OFF_LINE);
+  int16_t uniform_value = line_map(s_angle_value, UNIFORM_MIN, UNIFORM_MAX, 0, 4095);
+  add_sysex_data(UNIFORM_16, &uniform_value, OFF_LINE);
+  flush_sysex_to_send(OFF_LINE);
 }
 
 void sysex_message_process(void)
 {
-	uint8_t block_type = 0;
-	uint8_t sub_type = 0;
-	uint8_t data_type = 0;
-	uint8_t cmd_type = 0;
+  uint8_t block_type = 0;
+  uint8_t sub_type = 0;
+  uint8_t data_type = 0;
+  uint8_t cmd_type = 0;
 	
-	// read type.
-	read_sysex_type(&block_type , &sub_type, ON_LINE);
-	if((block_type != g_block_type)||(sub_type != g_block_sub_type))
-	{
-		return;
-	}
+  // read type.
+  read_sysex_type(&block_type , &sub_type, ON_LINE);
+  if((block_type != g_block_type)||(sub_type != g_block_sub_type))
+  {
+    return;
+  }
 	
-	// read command type.
-	data_type = BYTE_8;
-	if(read_next_sysex_data(&data_type, &cmd_type, ON_LINE) == false)
-	{
-		return;
-	}
-	if(CTL_READ_CURRENT_VALUE == cmd_type)
-	{		
-		//response mesaage to UART0
-		send_sensor_report_online();
-	}
-	else if(CTL_SET_REPORT_MODE == cmd_type)
-	{
-		data_type = BYTE_8;
-		if(read_next_sysex_data(&data_type, &s_report_mode, ON_LINE) == false) // read report mode.
-		{
-			return;
-		}
-		if(s_report_mode == REPORT_MODE_CYCLE)
-		{
-			data_type = LONG_40;
-			if(read_next_sysex_data(&data_type, &s_report_period, ON_LINE) == false) // read report period.
-			{
-				return;
-			}
-		}
-	}
-	else if(SET_CURRENT_ANGLE_ZERO == cmd_type)
-	{
-	  if(s_report_flag == false)
+  // read command type.
+  data_type = BYTE_8;
+  if(read_next_sysex_data(&data_type, &cmd_type, ON_LINE) == false)
+  {
+    return;
+  }
+  if(CTL_READ_CURRENT_VALUE == cmd_type)
+  {		
+    //response mesaage to UART0
+    send_sensor_report_online();
+  }
+  else if(CTL_SET_REPORT_MODE == cmd_type)
+  {
+    data_type = BYTE_8;
+    if(read_next_sysex_data(&data_type, &s_report_mode, ON_LINE) == false) // read report mode.
+    {
+      return;
+    }
+    if(s_report_mode == REPORT_MODE_CYCLE)
+    {
+      data_type = LONG_40;
+      if(read_next_sysex_data(&data_type, &s_report_period, ON_LINE) == false) // read report period.
+      {
+        return;
+      }
+    }
+  }
+  else if(SET_CURRENT_ANGLE_ZERO == cmd_type)
+  {
+    if(s_report_flag == false)
     {
       s_angle_pos_offset = 4095 - mp9960_read_raw_angle();
       set_rgb_led(0, 0, 128);
       s_report_flag = true;
-	  }
-	  else
+    }
+    else
     {
       s_report_flag = false;
       set_rgb_led(128, 0, 0);
     }
-	}
+  }
 }
 

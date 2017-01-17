@@ -4,10 +4,9 @@
 #include "mygpio.h"
 #include <stdio.h>
 
-// the protocol version and the firmware version.
+// the version.
 #define DEVICE_TYPE     	21 // neurons device.
 #define PROTOCOL_TYPE   	01 // firmata protocol.
-#define FIRMWARE_VERSION    002 // for protocol version.
 
 // uart buffer size.
 #define DEFAULT_UART_BUF_SIZE      128
@@ -27,7 +26,7 @@
 
 // data type for firmata.
 #define BYTE_8                     0x01
-#define BYTE_16					   0x02
+#define BYTE_16                    0x02
 #define SHORT_16                   0x03
 #define SHORT_24                   0x04
 #define LONG_40                    0x05
@@ -67,6 +66,7 @@
 #define BLOCK_SINGLE_DC_MOTOR           0x01
 #define BLOCK_DOUBLE_DC_MOTOR           0x02
 #define BLOCK_9G_SERVO                  0x03
+#define BLOCK_ENCODER_MOTOR             0x04
 
 /* SENSOR */
 #define CLASS_SENSOR                    0x63
@@ -77,13 +77,25 @@
 #define BLOCK_LINE_FOLLOWER             0x04
 #define BLOCK_COLOUR_SENSOR             0x05
 #define BLOCK_ACCELEROMETER_GYRO        0x06
+#define BLOCK_TEMPERATURE_HUMIDITY      0x07
+#define BLOCK_TENSIOMETER               0x08
+#define BLOCK_RAINING_SENSOR            0x09
+#define BLOCK_WIND_SPEED_SENSOR         0x0a
+#define BLOCK_PM_SENSOR                 0x0b
+#define BLOCK_PIR_SENSOR                0x0c
+#define BLOCK_VOLUME                    0x0d
 
 /* CONTROL */
 #define CLASS_CONTROL                   0x64
 
 #define BLOCK_POTENTIOMETER             0x01
 #define BLOCK_BUTTON                    0x02
-#define ANGLE_SENSOR                    0x03
+#define BLOCK_ANGLE_SENSOR              0x03
+#define BLOCK_MAKEY_MAKEY               0x04
+#define BLOCK_TOUCH_KEY                 0x05
+#define BLOCK_SELF_LOCKING_SWITCH       0x06
+#define BLOCK_JOYSTICK                  0x07
+#define BLOCK_SLIGHT_TOUCH_BUTTON       0x08
 
 /* DISPLAY */
 #define CLASS_DISPLAY                   0x65
@@ -92,30 +104,36 @@
 #define BLOCK_SINGLE_COLOUR_LED         0x02
 #define BLOCK_LIGHT_BAR                 0x03
 #define BLOCK_LED_COLOUR_MATRIX_8_8     0x04
+#define BLOCK_OLED_DISPLAY              0x05
+#define BLOCK_COOL_LIGHT                0x06
+
 
 /* AUDIO */
 #define CLASS_AUDIO                     0x66
 
 #define BLOCK_MP3                       0x01
+#define BLOCK_BUZZER                    0x02
+
 
 
 /* report mode */
-#define REPORT_MODE_REQ         		0x00 // report when host request current value.
-#define REPORT_MODE_DIFF        		0x01 // report when current vale is differnt from previous value.
-#define REPORT_MODE_CYCLE       		0x02 // report cycle.
-#define MIN_REPORT_PERIOD_ON_LINE		10
-#define DEFAULT_REPORT_PERIOD_ON_LINE   40
-#define OFF_LINE_REPORT_PERIOD  		40
+#define REPORT_MODE_REQ         		   0x00 // report when host request current value.
+#define REPORT_MODE_DIFF        		   0x01 // report when current vale is differnt from previous value.
+#define REPORT_MODE_CYCLE       		   0x02 // report cycle.
+#define MIN_REPORT_PERIOD_ON_LINE		   10
+#define DEFAULT_REPORT_PERIOD_ON_LINE  40
+#define OFF_LINE_REPORT_PERIOD  		   40
 
-#define ALL_DEVICE              		0xff    // pin included in I2C setup
+#define ALL_DEVICE              		   0xff    // pin included in I2C setup
 
-#define UNIFORM_MAX            		    1023
-#define UNIFORM_MIN						0
+#define UNIFORM_MAX            		     1023
+#define UNIFORM_MIN						         0
 
 extern volatile uint8_t g_block_no;
 extern volatile uint8_t g_block_type;
 extern volatile uint8_t g_block_sub_type;
 extern volatile uint8_t g_handshake_flag;
+extern uint16_t g_firmware_version;
 
 extern uint8_t Uart0RecData[UART0_REV_BUF_SIZE]; // uart0 receive buffer.
 extern uint8_t Uart1RecData[UART1_REV_BUF_SIZE]; // uart1 receive buffer.
@@ -157,7 +175,7 @@ void send_sysex_error_code(uint8_t code);
 * Return         : None
 * Attention      : if no sub_type, you can give null value.
 *******************************************************************************/
-void send_analog_signal_to_host(uint8_t type, uint8_t sub_type, uint8_t signal_type, int value);
+void send_analog_signal_to_host(uint8_t type, uint8_t sub_type, uint8_t signal_type, uint8_t value);
 
 /*******************************************************************************
 * Function Name  : send_digital_signal_to_hosts
@@ -215,7 +233,7 @@ int16_t real_convert_to_uinform(float real_data, float value_min, float value_ma
 * Return         : None
 * Attention      : if no sub_type, you can give null value.
 *******************************************************************************/
-void send_analog_signal_to_block(uint8_t type, uint8_t sub_type, int value);
+void send_analog_signal_to_block(uint8_t type, uint8_t sub_type, uint8_t real_value, uint16_t uniform_value);
 
 /*******************************************************************************
 * Function Name  : send_digital_signal_to_block

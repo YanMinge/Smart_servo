@@ -1,5 +1,5 @@
-#ifndef __SYSTTIME_H__
-#define __SYSTTIME_H__
+#ifndef __UART_PRINTF_H__
+#define __UART_PRINTF_H__
 
 #include "Mini58Series.h"
 #if 0

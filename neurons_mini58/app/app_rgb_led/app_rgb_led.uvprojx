@@ -80,7 +80,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>F:\work\neurons\BareCode_split\neurons_mini58\app\app_rgb_led\copy_hex.bat</UserProg1Name>
+            <UserProg1Name>copy_hex.bat</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -424,14 +424,14 @@
           <GroupName>block_driver</GroupName>
           <Files>
             <File>
-              <FileName>MeLedChain.c</FileName>
+              <FileName>MeRgbLed.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\block_driver\MeLedChain.c</FilePath>
+              <FilePath>..\..\block_driver\MeRgbLed.c</FilePath>
             </File>
             <File>
-              <FileName>MeLedChain.h</FileName>
+              <FileName>MeRgbLed.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\block_driver\MeLedChain.h</FilePath>
+              <FilePath>..\..\block_driver\MeRgbLed.h</FilePath>
             </File>
           </Files>
         </Group>

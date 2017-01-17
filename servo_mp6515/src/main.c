@@ -124,6 +124,7 @@ int32_t main(void)
         motor_protection();
       }
       device_neep_loop_in_sampling();
+//      uart_printf(UART0,"cur_pos:%d\r\n",smart_servo_angle_val);
     }
     if (millis() - report_time > 4 * SAMPLING_INTERVAL_TIME)
     {

@@ -16,11 +16,11 @@
 
 #define min(a,b) ((a)<(b)?(a):(b))
 #define max(a,b) ((a)>(b)?(a):(b))
-#define abs(x) ((x)>0?(x):-(x))
+#define abs_user(x) ((x)>0?(x):-(x))
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
 #define line_map(value, target_min, target_max, source_min, source_max) constrain((target_min + (value - source_min)*(target_max - target_min)/(source_max - source_min)), target_min, target_max)
 
-//#define round(x)     ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
+// #define round(x)     ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
 #define radians(deg) ((deg)*DEG_TO_RAD)
 #define degrees(rad) ((rad)*RAD_TO_DEG)
 #define sq(x) ((x)*(x))
@@ -48,4 +48,5 @@ uint8_t blink_rgb_led(uint16_t interval);
 void poll_led_request(void);
 void led_indicate_error(void);
 void led_indicate_normal(void);
+
 #endif /* __SYSINIT_H__ */

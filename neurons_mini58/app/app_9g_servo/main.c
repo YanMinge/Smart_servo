@@ -17,12 +17,14 @@
 #include "systime.h"
 #include "Interrupt.h"
 
+#define FIRMWARE_VERSION    003 // for firmware version.
+
 #define SERVO_POSITION_MIN  0
 #define SERVO_POSITION_MAX  180
-#define PWM_PIN             P0_5
+#define PWM_PIN             P0_4
 #define PWM_FREQUENCE       50
 #define MIN_POSITION_DUTY   3    // 0.6ms
-#define MAX_POSITION_DUTY   15   // 3ms
+#define MAX_POSITION_DUTY   11   // 3ms
 
 #define CMD_SET_ANGLE  		0x01     
   
@@ -30,6 +32,7 @@
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
 volatile unsigned long system_time = 0;
+uint16_t g_firmware_version = FIRMWARE_VERSION;
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global Interface                                                                                        */
@@ -90,6 +93,7 @@ void sysex_process_online(void)
 	read_sysex_type(&block_type, &sub_type, ON_LINE);
 	if((block_type != g_block_type) || (sub_type != g_block_sub_type))
 	{
+        send_sysex_error_code(WRONG_TYPE);
 		return;
 	}
 	// read command type.
@@ -106,11 +110,7 @@ void sysex_process_online(void)
 		{
 			return;
 		}
-		if(servo_position < 0)
-		{
-			servo_position = 0;
-		}
-		else if(servo_position > 180)
+		if(servo_position > 180)
 		{
 			servo_position = 180;
 		}

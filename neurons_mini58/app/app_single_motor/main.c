@@ -22,13 +22,14 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* Macro defines                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-#define CTL_SET_MOTOR_SPEED  0x01
+#define FIRMWARE_VERSION          003
+#define CTL_SET_MOTOR_SPEED       0x01
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
 volatile unsigned long system_time = 0;
-
+uint16_t g_firmware_version = FIRMWARE_VERSION;
 /*---------------------------------------------------------------------------------------------------------*/
 /* local variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
@@ -88,12 +89,13 @@ void init_block(void)
 void sysex_process_online(void)
 {
 	uint8_t block_type, sub_type, data_type, cmd_type;
-	int16_t motor_speed;
+	int8_t motor_speed;
 	
 	// read block type.
 	read_sysex_type(&block_type, &sub_type, ON_LINE);
 	if((block_type != g_block_type) || (sub_type != g_block_sub_type))
 	{
+        send_sysex_error_code(WRONG_TYPE);
 		return;
 	}
 	// read command type.
@@ -106,7 +108,7 @@ void sysex_process_online(void)
 	if(cmd_type == CTL_SET_MOTOR_SPEED)
 	{
 		// read data.
-		data_type = SHORT_24;
+		data_type = BYTE_16;
 		if(read_next_sysex_data(&data_type, &motor_speed, ON_LINE) == false)
 		{
 			return;

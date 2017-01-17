@@ -136,14 +136,14 @@ boolean servo_init(void);
 /*---------------------------------------------------------------------------------------------------------*/
 static void write_byte_uart0(uint8_t inputData)
 {
-    UART_WRITE(UART0, inputData);
-    UART_WAIT_TX_EMPTY(UART0);
+  UART_WRITE(UART0, inputData);
+  UART_WAIT_TX_EMPTY(UART0);
 }
 
 static void write_byte_uart1(uint8_t inputData)
 {
-    UART_WRITE(UART1, inputData);
-    UART_WAIT_TX_EMPTY(UART1);
+  UART_WRITE(UART1, inputData);
+  UART_WAIT_TX_EMPTY(UART1);
 }
 
 static uint8_t readbyte(uint8_t *argv,int idx)
@@ -229,23 +229,23 @@ static void sendbyte(int8_t val)
 
 static uint8_t sendShort(int val,boolean ignore_high)
 {
-	  uint8_t checksum;
-    uint8_t val_7bit[3]={0};
-    val2byte_s.shortVal = val;
-    val_7bit[0] = val2byte_s.byteVal[0] & 0x7f;
-    write_byte_uart1(val_7bit[0]);
-    val_7bit[1] = ((val2byte_s.byteVal[1] << 1) | (val2byte_s.byteVal[0] >> 7)) & 0x7f;
-    write_byte_uart1(val_7bit[1]);
-    checksum = val_7bit[0] + val_7bit[1];
-    //Send analog can ignored high
-    if(ignore_high == false)
-    {
-        val_7bit[2] = (val2byte_s.byteVal[1] >> 6) & 0x7f;
-        checksum += val_7bit[2];
-        checksum = checksum & 0x7f;
-        write_byte_uart1(val_7bit[2]);
-    }
-		return checksum;
+  uint8_t checksum;
+  uint8_t val_7bit[3]={0};
+  val2byte_s.shortVal = val;
+  val_7bit[0] = val2byte_s.byteVal[0] & 0x7f;
+  write_byte_uart1(val_7bit[0]);
+  val_7bit[1] = ((val2byte_s.byteVal[1] << 1) | (val2byte_s.byteVal[0] >> 7)) & 0x7f;
+  write_byte_uart1(val_7bit[1]);
+  checksum = val_7bit[0] + val_7bit[1];
+  //Send analog can ignored high
+  if(ignore_high == false)
+  {
+    val_7bit[2] = (val2byte_s.byteVal[1] >> 6) & 0x7f;
+    checksum += val_7bit[2];
+    checksum = checksum & 0x7f;
+    write_byte_uart1(val_7bit[2]);
+  }
+  return checksum;
 }
 
 static void sendFloat(float val)
@@ -266,67 +266,67 @@ static void sendFloat(float val)
 
 static uint8_t sendLong(long val)
 {
-    uint8_t checksum;
-    uint8_t val_7bit[5]={0};
-    val4byte_s.longVal = val;
-    val_7bit[0] = val4byte_s.byteVal[0] & 0x7f;
-    write_byte_uart1(val_7bit[0]);
-    val_7bit[1] = ((val4byte_s.byteVal[1] << 1) | (val4byte_s.byteVal[0] >> 7)) & 0x7f;
-    write_byte_uart1(val_7bit[1]);
-    val_7bit[2] = ((val4byte_s.byteVal[2] << 2) | (val4byte_s.byteVal[1] >> 6)) & 0x7f;
-    write_byte_uart1(val_7bit[2]);
-    val_7bit[3] = ((val4byte_s.byteVal[3] << 3) | (val4byte_s.byteVal[2] >> 5)) & 0x7f;
-    write_byte_uart1(val_7bit[3]);
-    val_7bit[4] = (val4byte_s.byteVal[3] >> 4) & 0x7f;
-    write_byte_uart1(val_7bit[4]);
-    checksum = (val_7bit[0] + val_7bit[1] + val_7bit[2] + val_7bit[3] + val_7bit[4]) & 0x7f;
-    return checksum;
+  uint8_t checksum;
+  uint8_t val_7bit[5]={0};
+  val4byte_s.longVal = val;
+  val_7bit[0] = val4byte_s.byteVal[0] & 0x7f;
+  write_byte_uart1(val_7bit[0]);
+  val_7bit[1] = ((val4byte_s.byteVal[1] << 1) | (val4byte_s.byteVal[0] >> 7)) & 0x7f;
+  write_byte_uart1(val_7bit[1]);
+  val_7bit[2] = ((val4byte_s.byteVal[2] << 2) | (val4byte_s.byteVal[1] >> 6)) & 0x7f;
+  write_byte_uart1(val_7bit[2]);
+  val_7bit[3] = ((val4byte_s.byteVal[3] << 3) | (val4byte_s.byteVal[2] >> 5)) & 0x7f;
+  write_byte_uart1(val_7bit[3]);
+  val_7bit[4] = (val4byte_s.byteVal[3] >> 4) & 0x7f;
+  write_byte_uart1(val_7bit[4]);
+  checksum = (val_7bit[0] + val_7bit[1] + val_7bit[2] + val_7bit[3] + val_7bit[4]) & 0x7f;
+  return checksum;
 }
 
 void debounced_read_button_key(void)
 {
-    unsigned long current_time;
-    int key_temp_value;
-    current_time = millis();
-    if (current_time - key_debounced_time > 3)
+  unsigned long current_time;
+  int key_temp_value;
+  current_time = millis();
+  if (current_time - key_debounced_time > 3)
+  {
+    key_debounced_time = current_time;
+    key_temp_value = digitalRead(P3_6);
+    if(key_debounced_count == 0)
     {
-        key_debounced_time = current_time;
-        key_temp_value = digitalRead(P3_6);
-        if(key_debounced_count == 0)
-        {
-            key_debounced_value = key_temp_value;
-        }
-        if(key_temp_value == key_debounced_value)
-        {
-            key_match_count++;
-        }
-        key_debounced_count ++;
+      key_debounced_value = key_temp_value;
     }
+    if(key_temp_value == key_debounced_value)
+    {
+      key_match_count++;
+    }
+    key_debounced_count ++;
+  }
 
-    if(key_debounced_count == 10)
+  if(key_debounced_count == 10)
+  {
+    key_debounced_count = 0;
+    if(key_match_count > 4)
     {
-        key_debounced_count = 0;
-        if(key_match_count > 4)
-        {
-            button_key_val = !key_debounced_value;
-        }
+      button_key_val = !key_debounced_value;
     }
+  }
 }
 
 void get_sensor_data(void)
 {
 //	debounced_read_button_key();
-	button_key_val = digitalRead(P3_6);
+  button_key_val = digitalRead(P3_6);
   if(button_key_val != pre_button_key_val)
   {
     pre_button_key_val = button_key_val;
 //    uart_printf(UART0,"button_key_val:%d\r\n",button_key_val);
     if(button_key_val == true)
     {
-        enable_or_disable_sensor();
-        set_rgb_led(128, 128, 128);
-        servo_init();
-        delay(100);
+      enable_or_disable_sensor();
+      set_rgb_led(128, 128, 128);
+      servo_init();
+      delay(100);
     }
   }
 }
@@ -348,151 +348,151 @@ int main(void)
 
   init_neuron_system();
 
-	reportSensor = cmdTimeOutValue0 = cmdTimeOutValue1 = millis();
+  reportSensor = cmdTimeOutValue0 = cmdTimeOutValue1 = millis();
 	
-	set_rgb_led(0, 0, 0);
+  set_rgb_led(0, 0, 0);
 	
-	pinMode(P3_6,0x0UL);
+  pinMode(P3_6,0x0UL);
 
   while(1)
   {
-		parse_uart0_recv_buffer_s();
-		parse_uart1_recv_buffer_s();
+    parse_uart0_recv_buffer_s();
+    parse_uart1_recv_buffer_s();
     get_sensor_data();
-		uint32_t currentMillis = millis();
-		if(currentMillis - reportSensor > 500)
+    uint32_t currentMillis = millis();
+    if(currentMillis - reportSensor > 500)
     {
-			reportSensor = currentMillis;
+      reportSensor = currentMillis;
       if(assign_dev_id_request_0() == true)
       {
 //        uart_printf(UART0,"uart0_ready\r\n");
-				uart0_ready = true;
-			}
-			else
+        uart0_ready = true;
+      }
+      else
       { 
 //        uart_printf(UART0,"uart0 not ready\r\n");
-				uart0_ready = false;
+        uart0_ready = false;
       }
       if(assign_dev_id_request_1() == true)
       {
 //        uart_printf(UART0,"uart1_ready\r\n");
-				uart1_ready = true;
-			}
-			else
+        uart1_ready = true;
+      }
+      else
       {
 //        uart_printf(UART0,"uart1 not ready\r\n");
-				uart1_ready = false;
-			}
-		}
+        uart1_ready = false;
+      }
+    }
 
-		if((uart0_ready == true) && (uart1_ready == true))
+    if((uart0_ready == true) && (uart1_ready == true))
     {
-			sensor_data_ok = true;
-		}
+      sensor_data_ok = true;
+    }
     else
-		{
+    {
       sensor_data_ok = false;
-		}
+    }
 
-	  if((sensor_data_ok == true) && (flash_sensor_data == true))
+    if((sensor_data_ok == true) && (flash_sensor_data == true))
     {
       set_rgb_led(0, 0, 128);
-		}
+    }
     else if((uart0_ready == true) && (uart1_ready == true))
     {
       set_rgb_led(128, 0, 128);
-		}
-		else if((uart0_ready == false) && (uart1_ready == true))
+    }
+    else if((uart0_ready == false) && (uart1_ready == true))
     {
       set_rgb_led(0, 128, 0);
-		}
-		else if((uart1_ready == false) && (uart0_ready == true))
+    }
+    else if((uart1_ready == false) && (uart0_ready == true))
     {
       set_rgb_led(128, 0, 0);
-		}
-		else
+    }
+    else
     {
       set_rgb_led(0,0,0);
-		}
+    }
   }
 }
 
 void parse_uart0_recv_buffer_s(void)
 {
-	uint8_t inputData = 0xFF;
-	uint16_t tmp;
+  uint8_t inputData = 0xFF;
+  uint16_t tmp;
   tmp = Uart0RevRtail;
-	while(Uart0Revhead != tmp)
+  while(Uart0Revhead != tmp)
   {
     tmp = Uart0RevRtail;
     inputData = Uart0RecData[Uart0Revhead];
     if(s_parsingSysexOnline_0)
-		{
+    {
       if (inputData == END_SYSEX)
       {
         //end of sysex
         s_parsingSysexOnline_0 = false;
         sysex_message_process_uart0();
       }
-			else
-			{
-				//normal data byte - add to buffer
-				s_sysex_0.storedInputData[s_sysexBytesRead_0] = inputData;
-				s_sysexBytesRead_0++;
-				if(s_sysexBytesRead_0 > DEFAULT_UART_BUF_SIZE-1)
-				{
-					s_parsingSysexOnline_0 = false;
-					s_sysexBytesRead_0 = 0;
-				}
-			}
-		}
-		else if(inputData == START_SYSEX)
-		{
+      else
+      {
+        //normal data byte - add to buffer
+        s_sysex_0.storedInputData[s_sysexBytesRead_0] = inputData;
+        s_sysexBytesRead_0++;
+        if(s_sysexBytesRead_0 > DEFAULT_UART_BUF_SIZE-1)
+        {
+          s_parsingSysexOnline_0 = false;
+          s_sysexBytesRead_0 = 0;
+        }
+      }
+    }
+    else if(inputData == START_SYSEX)
+    {
 			s_parsingSysexOnline_0 = true;
 			s_sysexBytesRead_0 = 0;
-		}
-		Uart0Revhead = (Uart0Revhead == (UART0_REV_BUF_SIZE - 1)) ? 0 : (Uart0Revhead + 1);
+    }
+    Uart0Revhead = (Uart0Revhead == (UART0_REV_BUF_SIZE - 1)) ? 0 : (Uart0Revhead + 1);
     Uart0RecvBufferPopBytes++;
-	}
+  }
 }
 
 void parse_uart1_recv_buffer_s(void)
 {
-	uint8_t inputData = 0xFF;
-	uint16_t tmp;
+  uint8_t inputData = 0xFF;
+  uint16_t tmp;
   tmp = Uart1RevRtail;
-	while(Uart1Revhead != tmp)
+  while(Uart1Revhead != tmp)
   {
     tmp = Uart1RevRtail;
     inputData = Uart1RecData[Uart1Revhead];
     if(s_parsingSysexOnline_1)
-		{
+    {
       if (inputData == END_SYSEX)
       {
         //end of sysex
         s_parsingSysexOnline_1 = false;
         sysex_message_process_uart1();
       }
-			else
-			{
-				//normal data byte - add to buffer
-				s_sysex_1.storedInputData[s_sysexBytesRead_1] = inputData;
-				s_sysexBytesRead_1++;
-				if(s_sysexBytesRead_1 > DEFAULT_UART_BUF_SIZE-1)
-				{
-					s_parsingSysexOnline_1 = false;
-					s_sysexBytesRead_1 = 0;
-				}
-			}
-		}
-		else if(inputData == START_SYSEX)
-		{
-			s_parsingSysexOnline_1 = true;
-			s_sysexBytesRead_1 = 0;
-		}
-		Uart1Revhead = (Uart1Revhead == (UART1_REV_BUF_SIZE - 1)) ? 0 : (Uart1Revhead + 1);
+      else
+      {
+        //normal data byte - add to buffer
+        s_sysex_1.storedInputData[s_sysexBytesRead_1] = inputData;
+        s_sysexBytesRead_1++;
+        if(s_sysexBytesRead_1 > DEFAULT_UART_BUF_SIZE-1)
+        {
+          s_parsingSysexOnline_1 = false;
+          s_sysexBytesRead_1 = 0;
+        }
+      }
+    }
+    else if(inputData == START_SYSEX)
+    {
+      s_parsingSysexOnline_1 = true;
+      s_sysexBytesRead_1 = 0;
+    }
+    Uart1Revhead = (Uart1Revhead == (UART1_REV_BUF_SIZE - 1)) ? 0 : (Uart1Revhead + 1);
     Uart1RecvBufferPopBytes++;
-	}
+  }
 }
 
 void sysex_message_process_uart0(void)
@@ -547,7 +547,7 @@ boolean assign_dev_id_request_0(void)
   while((resFlag0 & 0x01) != 0x01)
   {
     parse_uart0_recv_buffer_s();
-		get_sensor_data();
+    get_sensor_data();
     if(millis() - cmdTimeOutValue0 > 2000)
     {
       resFlag0 &= 0xfe;
@@ -587,7 +587,7 @@ void enable_or_disable_sensor(void)
   write_byte_uart0(START_SYSEX);
   write_byte_uart0(ALL_DEVICE);
   write_byte_uart0(CLASS_CONTROL);
-  write_byte_uart0(ANGLE_SENSOR);
+  write_byte_uart0(BLOCK_ANGLE_SENSOR);
   write_byte_uart0(0x02); 
   write_byte_uart0(0x68);
   write_byte_uart0(END_SYSEX);
@@ -600,19 +600,19 @@ void process_sensor_data(void *arg)
   uint8_t ServiceId = 0;
   uint8_t subSevice = 0;
   uint8_t reportType = 0;
-	long angle;
+  long angle;
   DeviceId = s_sysex_0.val.dev_id;
   ServiceId = s_sysex_0.val.srv_id;
   subSevice = s_sysex_0.val.value[0];
-	reportType = s_sysex_0.val.value[1];
-	angle = readlong(s_sysex_0.val.value,2);
+  reportType = s_sysex_0.val.value[1];
+  angle = readlong(s_sysex_0.val.value,2);
 //  uart_printf(UART0,"reportType:%d,angle:%ld\r\n",reportType,angle);
-	if(DeviceId == 2)
+  if(DeviceId == 2)
   {
    angle = -angle;
-	}
-	moveTo(DeviceId,angle,40);
-	flash_sensor_data = true;
+  }
+  moveTo(DeviceId,angle,40);
+  flash_sensor_data = true;
 }
 
 void assign_dev_id_response_0(void *arg)
@@ -688,8 +688,8 @@ boolean servo_init(void)
   write_byte_uart1(SMART_SERVO);
   write_byte_uart1(SET_SERVO_INIT_ANGLE);
   write_byte_uart1(0x00);
-	checksum = (ALL_DEVICE + SMART_SERVO + SET_SERVO_INIT_ANGLE) & 0x7f;
-	checksum += sendShort(40,true);
+  checksum = (ALL_DEVICE + SMART_SERVO + SET_SERVO_INIT_ANGLE) & 0x7f;
+  checksum += sendShort(40,true);
   checksum = checksum & 0x7f;
   write_byte_uart1(checksum);
   write_byte_uart1(END_SYSEX);

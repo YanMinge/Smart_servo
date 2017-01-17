@@ -21,16 +21,18 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* MACRO define                                                                                  		  */
 /*---------------------------------------------------------------------------------------------------------*/
-#define CTL_SET_DISPLAY_VALUE  0x01
-
-/* timer variables */
-unsigned long currentMillis;        // store the current value from millis()
-unsigned long previousMillis;       // for comparison with currentMillis
-volatile unsigned long system_time = 0;
+#define FIRMWARE_VERSION            003
+#define CTL_SET_DISPLAY_VALUE       0x01
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
+uint16_t g_firmware_version = FIRMWARE_VERSION;
+// time variables.
+uint32_t currentMillis;        // store the current value from millis()
+uint32_t previousMillis;       // for comparison with currentMillis
+volatile unsigned long system_time = 0;
+
 union offline_data{
     uint8_t data_buf[8];
     uint8_t byte8_val;
@@ -96,10 +98,8 @@ void init_block(void)
 {
 	g_block_type = CLASS_DISPLAY;
 	g_block_sub_type = BLOCK_NUMERIC_DISPLAY;
-	
 	NumericDispalyInit();
 	uart0_recv_attach(sysex_process_online, sysex_process_offline);
-	
 	set_rgb_led(0, 0, 128);
 }
 	
@@ -114,6 +114,7 @@ void sysex_process_online(void)
 	read_sysex_type(&block_type, &sub_type, ON_LINE);
 	if((block_type != g_block_type)||(sub_type != g_block_sub_type)) // block type wrong!
 	{
+        send_sysex_error_code(WRONG_TYPE);
 		return;
 	}
 	
@@ -141,50 +142,69 @@ void sysex_process_offline(void)
 	union offline_data first_data ={0};
 	float display_value;
 	uint8_t block_type, sub_type, data_type;
+    char makey_makey_display_buf[5] = {0};
 	
 	// read block type.
 	read_sysex_type(&block_type, &sub_type, OFF_LINE);
+	if((block_type == CLASS_CONTROL)&&(sub_type == BLOCK_MAKEY_MAKEY))
+    {
+         read_next_sysex_data(&data_type, &first_data, OFF_LINE);
+         for(int i = 0; i < 4; i++)
+        {
+            if(((first_data.byte8_val)&(0x01<<i)) == (0x01<<i))
+            {
+                makey_makey_display_buf[i] = '1';
+            }
+            else
+            {
+                makey_makey_display_buf[i] = '0';
+            }
+        }
+        makey_makey_display_buf[4] = '\0';
+        NumericDisplayStr(makey_makey_display_buf);
+    }
+    else
+    {
+        // read data.
+        read_next_sysex_data(&data_type, &first_data, OFF_LINE);
 	
-	// read data.
-	read_next_sysex_data(&data_type, &first_data, OFF_LINE);
-	
-	switch(data_type)
-	{
-		case BYTE_8:
-		{
-			display_value = (float)first_data.byte8_val;
-		}
-		break;
-		case BYTE_16:
-		{
-			display_value = (float)(first_data.byte16_val);
-		}
-		break;
-		case SHORT_16:
-		{
-			display_value = (float)(first_data.short16_val);
-		}
-		break;
-		case SHORT_24:  
-		{
-			display_value = (float)(first_data.short16_val);
-		}
-		break;
-		case LONG_40:
-		{
-			display_value = (float)(first_data.long32_val);
-		}
-		break;
-		case FLOAT_40:
-		{
-			display_value = (float)(first_data.float32_val);
-		}
-		break;
-		default:
-		break;
-	}
-	
-	NumericDisplayFloat(display_value);
+        switch(data_type)
+        {
+            case BYTE_8:
+            {
+                display_value = (float)first_data.byte8_val;
+            }
+            break;
+            case BYTE_16:
+            {
+                display_value = (float)(first_data.byte16_val);
+            }
+            break;
+            case SHORT_16:
+            {
+                display_value = (float)(first_data.short16_val);
+            }
+            break;
+            case SHORT_24:  
+            {
+                display_value = (float)(first_data.short16_val);
+            }
+            break;
+            case LONG_40:
+            {
+                display_value = (float)(first_data.long32_val);
+            }
+            break;
+            case FLOAT_40:
+            {
+                display_value = (float)(first_data.float32_val);
+            }
+            break;
+            default:
+            break;
+        }
+        NumericDisplayFloat(display_value);
+    }
 }
 
 void TMR1_IRQHandler(void)

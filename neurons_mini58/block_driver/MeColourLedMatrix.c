@@ -1,7 +1,15 @@
 #include "MeColourLedMatrix.h"
 #include "systime.h"
 #include "MeColourLedMatrixDef.h"
-#include "uart_printf.h"
+
+#define LED_AMOUNT  64
+
+#define DIRECT_SHOW_MODE                    0x00
+#define ERASE_SHOW_MODE                     0x01
+#define LEFT_SHOW_MODE                      0x02
+#define RIGHT_SHOW_MODE                     0x03
+
+#define DINAMIC_REFRESH_INTERVAL            200  // ms
 
 //------------SPI---------------
 volatile uint8_t hwSPI_Tx_Fifo[200];
@@ -9,7 +17,18 @@ volatile uint8_t bSPI_MasEndFlag = 0;
 volatile uint32_t	wSPI_NBytes = 0;
 volatile uint32_t wSPI_Send_Pointer = 0;
 
-unsigned char display_matrix[8]={0x88,0xD8,0xA8,0xA8,0x88,0x88,0x88,0x00};
+uint8_t display_matrix[8]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+struct rgb_value light_panel[] = {{0x00, 0x00, 0x00},{0xff, 0x00, 0x00}, {0xff, 0xaf, 0x00}, {0xff, 0xff, 0x00},{0x00, 0xff, 0x00},  \
+                                  {0x00, 0xff, 0xff},{0x00, 0x00, 0xff},{0xd4, 0x00, 0xff},{0xff, 0xff, 0xff}
+	                             };
+
+static uint32_t s_dinamic_pre_millis;
+static uint32_t s_animation_pre_millis;
+static uint8_t  s_colour_block_matrix[LED_AMOUNT*2]; // store the current set frame, and the previous frame.
+static uint8_t  s_animation_store_array[LED_AMOUNT*4]; // store the 4 animation frames.
+static uint8_t  s_show_over_flag = 0;
+static uint8_t  s_dinamic_count = 0;
+static uint8_t  s_animation_frame_flag_arry[4] = {0, 0, 0, 0}; // a frame set, the corresponding flag set to 1, else 0.
 
 static void spi_driver_init(void)
 {
@@ -1053,6 +1072,11 @@ void MeColourLEDMatrix_DrawBitMap(uint8_t led_matrix[], uint8_t r_value, uint8_t
 	
 }
 
+void led_matrix_clear(void)
+{
+    single_led_set(0, 0, 0, 0);
+}
+
 void MeColourLEDMatrix_setBreath(uint8_t breath_set)
 {
 	if(BREATH_ON == breath_set)
@@ -1066,6 +1090,235 @@ void MeColourLEDMatrix_setBreath(uint8_t breath_set)
 	{
 		SPI_W_3BYTE(SPI_FRAME_FUNCTION_PAGE, BREATH_CTL_REG2, (mskBC_CONTINUOUS_BREATH_DIS|mskBC_BREATH_DIS|(mskBC_EXTINGUISH_TIME_CONST&0x07)));	
 	}
+}
+
+static void colour_block_show_direct(void)
+{
+    struct rgb_value colour_value;
+    for(int i = 0; i < LED_AMOUNT; i++)
+    {
+       colour_value =  light_panel[s_colour_block_matrix[i]];
+       single_led_set(i+ 1, colour_value.r, colour_value.g, colour_value.b);
+    }
+    s_show_over_flag = 0;
+    s_animation_pre_millis = millis();
+}
+
+static void colour_block_show_erase(void)
+{
+    uint8_t led_index;
+    struct rgb_value colour_value;
+    uint32_t current_time = millis();
+    if((current_time - s_dinamic_pre_millis) > DINAMIC_REFRESH_INTERVAL)
+    {
+        s_dinamic_pre_millis = current_time;
+        
+        for(int j = 0; j < 8; j++)
+        {
+            led_index = (j<<3) + s_dinamic_count;
+            colour_value = light_panel[s_colour_block_matrix[led_index]];    
+            single_led_set(led_index + 1, colour_value.r, colour_value.g, colour_value.b);
+        }
+        s_dinamic_count++;
+        if(s_dinamic_count >= 8)
+        {
+            s_show_over_flag = 0;
+            s_dinamic_count = 0;
+            s_animation_pre_millis = millis();
+        }
+    }
+}
+
+
+static void colour_block_show_left(void)
+{
+    uint8_t led_index, i , j;
+    struct rgb_value colour_value;
+    uint32_t current_time = millis();
+    if((current_time - s_dinamic_pre_millis) > DINAMIC_REFRESH_INTERVAL)
+    {
+        s_dinamic_pre_millis = current_time;
+        
+        for(j = 0; j < (8 - s_dinamic_count-1); j++) // column.
+        {
+            for(i = 0; i < 8; i++) // row
+            {
+                led_index = (i<<3) + j;
+                colour_value = light_panel[s_colour_block_matrix[(led_index + LED_AMOUNT + 1 + s_dinamic_count)]];    
+                single_led_set(led_index + 1 , colour_value.r, colour_value.g, colour_value.b);
+            }
+        }
+        for(j = (8 - s_dinamic_count -1); j < 8; j++) //column
+        {
+            for(i = 0; i < 8; i++) // row
+            {
+                led_index = (i<<3) + j; 
+                colour_value = light_panel[s_colour_block_matrix[(led_index  - (8 - s_dinamic_count -1))]];    
+                single_led_set(led_index + 1, colour_value.r, colour_value.g, colour_value.b);
+            }
+        }
+        s_dinamic_count++;
+        if(s_dinamic_count >= 8)
+        {
+            s_show_over_flag = 0;
+            s_dinamic_count = 0;
+            s_animation_pre_millis = millis();
+        }
+    }
+}
+
+static void colour_block_show_right(void)
+{
+    uint8_t led_index, i , j;
+    struct rgb_value colour_value;   
+    
+    uint32_t current_time = millis();
+    if((current_time - s_dinamic_pre_millis) > DINAMIC_REFRESH_INTERVAL)
+    {
+        s_dinamic_pre_millis = current_time;
+        
+        for(j = 0; j < s_dinamic_count + 1; j++) //column
+        {
+            for(i = 0; i < 8; i++) // row
+            {
+                led_index = (i<<3) + j; 
+                colour_value = light_panel[s_colour_block_matrix[led_index+7-s_dinamic_count]];                
+                single_led_set(led_index + 1, colour_value.r, colour_value.g, colour_value.b);
+            }
+        }              
+        for(j = s_dinamic_count + 1; j < 8; j++) // column.
+        {
+            for(i = 0; i < 8; i++) // row
+            {
+                led_index = (i<<3) + j;
+                colour_value = light_panel[s_colour_block_matrix[(led_index - (s_dinamic_count + 1)+ LED_AMOUNT)]];              
+                single_led_set(led_index + 1 , colour_value.r, colour_value.g, colour_value.b);
+            }
+        }                       
+        s_dinamic_count++;
+        if(s_dinamic_count >= 8)
+        {
+            s_show_over_flag = 0;
+            s_dinamic_count = 0;
+            s_animation_pre_millis = millis();
+        }
+    }
+}
+
+void set_leds_by_colour_block(uint8_t led_quantity, uint8_t* led_array)
+{ 
+    s_show_over_flag = 1;
+    s_dinamic_count = 0;
+    
+    int i = 0;
+    // copy the old map to store area 2.
+    for(i = 0; i < LED_AMOUNT; i++) 
+    {
+        s_colour_block_matrix[i + 64] = s_colour_block_matrix[i];
+    }
+    // copy the new map to store area 1.
+    for(i = 0; i < led_quantity; i++)
+    {
+        s_colour_block_matrix[i] = led_array[i];
+    }
+    for(i = led_quantity; i < LED_AMOUNT; i++)
+    {
+        s_colour_block_matrix[i] = 0;
+    }   
+}
+
+void set_led_by_colour_block_clear(void)
+{
+    for(int i=0;i<2*LED_AMOUNT;i++)
+    {
+        s_colour_block_matrix[i] = 0;
+    }
+}
+
+void colour_block_show(uint8_t mode)
+{
+    if(s_show_over_flag == 0)
+    {
+        return;
+    }    
+    switch(mode)
+    {
+        case DIRECT_SHOW_MODE:
+            colour_block_show_direct();
+        break;
+        case ERASE_SHOW_MODE:
+            colour_block_show_erase();
+        break;
+        case LEFT_SHOW_MODE:
+            colour_block_show_left();
+        break;
+        case RIGHT_SHOW_MODE:
+            colour_block_show_right();
+        break;
+        default:
+        break;
+    }
+}
+
+void set_animation_frame(uint8_t sequence, uint8_t led_quantity, uint8_t* led_array)
+{
+    if(sequence > 3) // only store 4 frames.
+    {
+        return;
+    }
+    
+    int i;
+    for(i = 0; i < led_quantity; i++)
+    {
+        s_animation_store_array[i + sequence*64] = led_array[i];
+    }
+    for(i = led_quantity; i< LED_AMOUNT; i++)
+    {
+        s_animation_store_array[i + sequence*64] = 0;
+    }
+    
+    s_animation_frame_flag_arry[sequence] = 1;
+}
+
+void animation_show(uint8_t mode, uint32_t interval)
+{
+    static uint8_t s_frame_index;
+    if(s_show_over_flag == 0)
+    {
+        uint32_t current_time = millis();
+        if((current_time - s_animation_pre_millis) > interval)
+        {   
+            for( ; s_frame_index < 4; s_frame_index++)
+            {
+                if(s_animation_frame_flag_arry[s_frame_index] == 1)
+                {
+                    set_leds_by_colour_block(LED_AMOUNT, (s_animation_store_array + (64*s_frame_index)));
+                    s_frame_index++;
+                    break;
+                } 
+            }
+            if(s_frame_index >= 4)
+            {
+                s_frame_index = 0;
+            }
+        }
+    }
+    colour_block_show(mode);
+}
+
+void animation_clear(void)
+{
+    int i;
+    // clear animation store array.
+    for(i = 0; i < (LED_AMOUNT*4); i++)
+    {
+        s_animation_store_array[i] = 0;
+    }
+    // clear animation set flag.
+    for(i = 0; i < 4; i++)
+    {
+        s_animation_frame_flag_arry[i] = 0;
+    }
 }
 
 void led_colour_matrix_init(void)

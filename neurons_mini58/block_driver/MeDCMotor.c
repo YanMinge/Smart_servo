@@ -2,17 +2,9 @@
 static int s_motor1_speed;
 static int s_motor2_speed;
 
-static uint8_t speed_to_duty(int speed)
+void dc_run(uint8_t dc_num, int8_t speed)
 {
-	return speed*100/(MOTOR_SPEED_MAX - MOTOR_SPEED_MIN);
-}
-
-void dc_run(uint8_t dc_num, int speed)
-{
-    int speed_temp = (int)abs(speed);
-    speed_temp = constrain(speed_temp,0,255);
-	uint8_t speed_duty;
-	speed_duty = speed_to_duty(speed_temp);
+    uint8_t speed_duty = (uint8_t)abs(speed);
     if(dc_num == MOTOR_1)
     {
 		s_motor1_speed = speed;

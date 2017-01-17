@@ -334,25 +334,32 @@ static void assign_dev_id_response(void *arg)
 
 static void system_reset_response(void *arg)
 {
-	SYS_ResetChip();
+    SYS_UnlockReg();
+	SYS_ResetCPU();
 }
 
 static void query_firmware_version_response(void *arg)
 {
 	uint8_t device_type = DEVICE_TYPE;
 	uint8_t protocol_type = PROTOCOL_TYPE;
-	uint16_t firwave_version = FIRMWARE_VERSION;
-	
+    
 	init_sysex_to_send(CTL_QUERY_FIRMWARE_VERSION, 0, ON_LINE);
 	add_sysex_data(BYTE_8, (void*)(&device_type), ON_LINE);
 	add_sysex_data(BYTE_8, (void*)(&protocol_type), ON_LINE);
-	add_sysex_data(SHORT_16, (void*)(&firwave_version), ON_LINE);
+	add_sysex_data(SHORT_16, (void*)(&g_firmware_version), ON_LINE);
 	flush_sysex_to_send(ON_LINE);
 }
 
 static void set_sysex_feedback_response(void *arg)
 {
-	s_feedback_flag = sysex.val.value[0];
+	uint8_t block_type, sub_type, data_type;
+	read_sysex_type(&block_type , &sub_type, ON_LINE);
+	
+	data_type = BYTE_8;
+	if(read_next_sysex_data(&data_type, (void*)(&s_feedback_flag), ON_LINE)== false)
+	{
+		return;
+	}
 }
 
 static void set_rgb_led_response(void *arg)
@@ -411,26 +418,20 @@ static void set_baudrate_response(void *arg)
 
 static void communication_test_response(void *arg)
 {
-	uint8_t serve_type, sub_type, first_byte, second_byte, third_byte, fourth_byte;
+	uint8_t serve_type, sub_type;
+    uint8_t test_arry[5] = {0x01, 0x02, 0x03, 0x04, 0x05};
+    uint8_t read_arry[5];
 	read_sysex_type(&serve_type, &sub_type, ON_LINE);
 	uint8_t data_type = BYTE_8;
-	if(read_next_sysex_data(&data_type, &first_byte, ON_LINE) == false)
-	{
-		return;
-	}
-	if(read_next_sysex_data(&data_type, &second_byte, ON_LINE) == false)
-	{
-		return;
-	}
-	if(read_next_sysex_data(&data_type, &third_byte, ON_LINE) == false)
-	{
-		return;
-	}
-	if(read_next_sysex_data(&data_type, &fourth_byte, ON_LINE) == false)
-	{
-		return;
-	}
-	if((first_byte == 0x01)&&(second_byte == 0x02)&&(third_byte == 0x03)&&(fourth_byte == 0x04))
+    uint8_t i = 0;
+    for( ; i < 5; i++)
+    {
+        if(read_next_sysex_data(&data_type, &(read_arry[i]), ON_LINE) == false)
+        {
+            return;
+        }
+    }
+	if(memcmp(test_arry, read_arry, sizeof(test_arry)) == 0)
 	{
 		send_sysex_error_code(PROCESS_SUC);
 	}
@@ -450,7 +451,7 @@ static void response_product_query(void)
 	write_byte_uart0(0x04);
 	write_byte_uart0(0x09);
 	
-	sprintf(product_version, "%d.%2d.%3d\r\n", DEVICE_TYPE, PROTOCOL_TYPE, FIRMWARE_VERSION);
+	sprintf(product_version, "%d.%2d.%3d\r\n", DEVICE_TYPE, PROTOCOL_TYPE, g_firmware_version);
 	
 	for(int i = 0; i < strlen(product_version); i++)
 	{
@@ -583,7 +584,7 @@ int8_t add_sysex_data(uint8_t type, void* value, boolean mode)
 			case SHORT_24:
 			{
 				sysex_to_send.storedInputData[s_to_send_bytes_count++] = SHORT_24; // type
-				int16_t temp_value = *(uint16_t*)value;                            // value
+				int16_t temp_value = *(int16_t*)value;                            // value
 				sendShort(temp_value, false);
 			}
 			break;
@@ -653,6 +654,7 @@ int8_t read_next_sysex_data(uint8_t* type, void* value, boolean mode)
 	{
 		if((s_read_bytes_count + data_len(*type))> (sysexBytesRead - 1)) // check length, exclusive check sum.
 		{
+            send_sysex_error_code(CHECK_ERROR);
 			return false;
 		}
 			
@@ -700,12 +702,19 @@ int8_t read_next_sysex_data(uint8_t* type, void* value, boolean mode)
 	
 	else if(mode == OFF_LINE)
 	{
-		if((s_read_bytes_count + data_len(*type) + 1)> (sysexBytesRead - 2)) // check length, exclusive uniform value.
+        if(s_read_bytes_count < sysexBytesRead -2)
+        {
+            *type = sysex.storedInputData[s_read_bytes_count++]; // type
+        }
+        else
+        {
+            return false;
+        }
+        
+		if((s_read_bytes_count + data_len(*type))> (sysexBytesRead - 2)) // check length, exclusive uniform value.
 		{
 			return false;
 		}
-		
-		*type = sysex.storedInputData[s_read_bytes_count++]; // type
 		
 		switch(*type)
 		{
@@ -728,7 +737,7 @@ int8_t read_next_sysex_data(uint8_t* type, void* value, boolean mode)
 			break;
 			case SHORT_24:
 			{
-				*(int16_t*)value = readShort(sysex.storedInputData + s_read_bytes_count, 0, true);
+				*(int16_t*)value = readShort(sysex.storedInputData + s_read_bytes_count, 0, false);
 				s_read_bytes_count += 3;
 			}
 			break;
@@ -752,13 +761,13 @@ int8_t read_next_sysex_data(uint8_t* type, void* value, boolean mode)
 }
 
 /* on line api */
-void send_analog_signal_to_host(uint8_t type, uint8_t sub_type, uint8_t signal_type, int value)
-{
-	int temp_value = value;	
+void send_analog_signal_to_host(uint8_t type, uint8_t sub_type, uint8_t signal_type, uint8_t value)
+{	
 	init_sysex_to_send(type, sub_type, ON_LINE);
 	
 	add_sysex_data(BYTE_8, &signal_type, ON_LINE);
-	add_sysex_data(SHORT_16, &temp_value, ON_LINE);
+    
+	add_sysex_data(BYTE_8, &value, ON_LINE);
 	
 	flush_sysex_to_send(ON_LINE);
 }
@@ -799,16 +808,11 @@ int16_t real_convert_to_uinform(float convert_data, float value_min, float value
 	return uniform_value;
 }
 
-void send_analog_signal_to_block(uint8_t type, uint8_t sub_type, int value)
+void send_analog_signal_to_block(uint8_t type, uint8_t sub_type, uint8_t real_value, uint16_t uniform_value)
 {
-	
-	
 	init_sysex_to_send(type, sub_type, OFF_LINE);
-	
-	sysex_to_send.storedInputData[s_to_send_bytes_count++] = SHORT_16;  // data type.
-	sendShort(value, true); // real value.
-	sendShort(value, true); // uniformalization value.
-	
+	add_sysex_data(BYTE_8, &real_value, OFF_LINE);
+	add_sysex_data(UNIFORM_16, &uniform_value, OFF_LINE);
 	flush_sysex_to_send(OFF_LINE);
 }
 
@@ -849,11 +853,13 @@ static int8_t check_sysex_message(void)
 }
 void send_sysex_return_code(uint8_t code)
 {
-	if(s_feedback_flag != 1)
-	{
-		return;
+    if(code == PROCESS_SUC)
+    {
+        if(s_feedback_flag != 1)
+        {
+            return;
+        }
 	}
-	
 	init_sysex_to_send(GENERAL_RESPONSE, 0, ON_LINE);
 	add_sysex_data(BYTE_8, &code, ON_LINE);
 	flush_sysex_to_send(ON_LINE);
@@ -892,13 +898,16 @@ static void processSysexMessageOnline(void)
 		{
 			send_sysex_return_code(PROCESS_SUC);
 		}
+        
+        flush_uart0_local_buffer(); // send feedback package.
+        
         //CTL_ASSIGN_DEV_ID should processed one by one
         if((device_id == ALL_DEVICE) &&
            (serve_type != CTL_ASSIGN_DEV_ID))
         {
             flush_uart0_to_uart1(ON_LINE);
         }
-        switch(sysex.val.srv_id)
+        switch(serve_type)
 		{
 			case CTL_ASSIGN_DEV_ID:
 				assign_dev_id_response(NULL);
@@ -937,6 +946,7 @@ static void processSysexMessageOnline(void)
 				{
 					device_service_process_online();
 				}
+                break;
 		}
     }
     else
@@ -1009,12 +1019,7 @@ void parse_uart0_recv_buffer(void)
 			{
 				//end of sysex
 				parsingSysexOnline = false;
-				
-				// on line mode or sysex is for assign id.
-				if(g_block_no != 0 || sysex.val.srv_id == CTL_ASSIGN_DEV_ID) 
-				{
-					processSysexMessageOnline();
-				}
+				processSysexMessageOnline();	
 			}
 			else
 			{

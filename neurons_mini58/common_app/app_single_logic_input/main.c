@@ -17,6 +17,8 @@
 #include "systime.h"
 #include "Interrupt.h"
 
+#define FIRMWARE_VERSION        003
+
 #define CTL_READ_CURRENT_VALUE  0x01
 #define REPORT_CURRENT_VALUE    0x01
 #define CTL_SET_REPORT_MODE     0x7f
@@ -39,6 +41,7 @@ int key_debounced_value;
 uint8_t g_logic_pin;
 volatile boolean g_logic_value;
 volatile boolean g_pre_logic_value;
+uint16_t g_firmware_version = FIRMWARE_VERSION;
 volatile unsigned long system_time = 0;
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global Interface                                                                                        */
@@ -111,12 +114,27 @@ int main(void)
 
 void init_block()
 {
+#if defined D_TOUCH_KEY   
 	g_logic_pin = P5_2;
 	g_block_type = CLASS_CONTROL;
+    g_block_sub_type = BLOCK_TOUCH_KEY;
+#elif defined D_BUTTON_KEY_1
+    g_logic_pin = P5_2;
+	g_block_type = CLASS_CONTROL;
     g_block_sub_type = BLOCK_BUTTON;
-    
+#elif defined D_SELF_LOCKING_SWITCH
+    g_logic_pin = P5_2;
+	g_block_type = CLASS_CONTROL;
+    g_block_sub_type = BLOCK_SELF_LOCKING_SWITCH;
+#elif defined D_PIR_MOTION_SENSOR
+    g_logic_pin = P3_2;
+    g_block_type = CLASS_SENSOR;
+    g_block_sub_type = BLOCK_PIR_SENSOR;
+    s_report_mode = REPORT_MODE_DIFF;
+#else
+	#error you should add a device type in preprocessor symbols.
+#endif
 	pinMode(g_logic_pin,GPIO_MODE_INPUT);
-
 	uart0_recv_attach(sysex_process_online, NULL);
 	
 	set_rgb_led(0, 0, 128);
@@ -152,8 +170,11 @@ void get_sensor_data(void)
 #elif defined D_LIMIT_SWITCH
 			g_logic_value = key_debounced_value;
 #elif defined D_PIR_MOTION_SENSOR
-#elif defined D_TOUCH_SENSOR
+            g_logic_value = key_debounced_value;
+#elif defined D_TOUCH_KEY
 			g_logic_value = key_debounced_value;
+#elif defined D_SELF_LOCKING_SWITCH
+            g_logic_value = key_debounced_value;
 #elif defined D_SWITCH
 			g_logic_value = !key_debounced_value;
 #else
@@ -176,6 +197,7 @@ void sysex_process_online(void)
 	read_sysex_type(&block_type , &sub_type, ON_LINE);
 	if((block_type != g_block_type) || (sub_type != g_block_sub_type))
 	{
+        send_sysex_error_code(WRONG_TYPE);
 		return;
 	}
 	
@@ -204,6 +226,10 @@ void sysex_process_online(void)
 			{
 				return;
 			}
+            if(s_report_period < 10)
+            {
+                s_report_period = 10;
+            }
 		}
 	}
 }

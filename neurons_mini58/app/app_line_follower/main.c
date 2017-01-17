@@ -21,7 +21,8 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* Macro defines                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-#define THRESHOLD_VALUE          550
+#define FIRMWARE_VERSION         003
+#define THRESHOLD_VALUE          650
 #define FILTER_TIMES             50
 #define LINE_DETECT_1_PIN        P1_0
 #define LINE_DETECT_2_PIN        P1_5
@@ -48,7 +49,7 @@ static uint8_t  s_report_mode = REPORT_MODE_CYCLE;
 /* global variable                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
 volatile unsigned long system_time = 0;
-
+uint16_t g_firmware_version = FIRMWARE_VERSION;
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global Interface                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
@@ -140,7 +141,6 @@ void get_sensor_data(void)
 	uint8_t detect_value  = 0;
 	value_line_detect_1 = analogRead(LINE_DETECT_1_PIN);
 	value_line_detect_2	= analogRead(LINE_DETECT_2_PIN);
-	
 	// compare
 	if(value_line_detect_1 > THRESHOLD_VALUE)
 	{
@@ -208,7 +208,8 @@ void sysex_message_process(void)
 	read_sysex_type(&block_type , &sub_type, ON_LINE);
 	if((block_type != g_block_type)||(sub_type != g_block_sub_type))
 	{
-		return;
+    send_sysex_error_code(WRONG_TYPE);
+    return;
 	}
 	
 	// read command type.
@@ -236,6 +237,10 @@ void sysex_message_process(void)
 			{
 				return;
 			}
+            if(s_report_period < 10)
+            {
+                s_report_period = 10;
+            }
 		}
 	}
 }

@@ -25,7 +25,7 @@
 #endif
 
 #define MOTOR_SPEED_MIN  0
-#define MOTOR_SPEED_MAX  255
+#define MOTOR_SPEED_MAX  100
 #define MOTOR_FREQUENCE  16000
 
 #define MOTOR_1 0
@@ -35,7 +35,7 @@
 #define SHORT_THRESHOLD_VALUE     20
 #define SHORT_THRESHOLD_TIMES     50
 
-void dc_run(uint8_t dc_num, int speed);
+void dc_run(uint8_t dc_num, int8_t speed);
 void dc_motor_init(void);
 uint8_t motor_short_detect(void);
 void dc_motor_stop(uint8_t motor_num);

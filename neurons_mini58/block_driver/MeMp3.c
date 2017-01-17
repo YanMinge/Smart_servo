@@ -11,6 +11,7 @@
 #define PLAY_NEXT_CMD					0xAC
 #define PLAY_LAST_CMD					0xAD
 #define VOLUME_CMD  					0xAE
+#define PLAY_MODE_CMD                   0xAF
 #define PAUSE_OR_CONTINUE_PLAY_CMD		0xAA
 #define STOP_PLAY_CMD					0xAB
 #define PLAY_MODE_SET_CMD				0xAF
@@ -19,9 +20,11 @@
 #define STOP_RECORD_CMD					0xD9
 #define DELETE_CMD  					0xDA
 #define FORMAT_CMD 						0xDE
+  
 
 static uint8_t s_frames_to_mp3[15] = {0};
 static uint8_t s_frames_write_bytes = 0;
+static uint8_t s_current_volume = 0;
 
 static void init_package(void)
 {
@@ -44,7 +47,7 @@ static void flush_whole_package(void)
 	for(int i = 0; i < s_frames_write_bytes; i++)
 	{
 		SoftwareSerialWrite(s_frames_to_mp3[i]);
-		uart_printf(UART0, "-%x-", s_frames_to_mp3[i]);
+		//uart_printf(UART0, "-%x-", s_frames_to_mp3[i]);
 	}
 }
 
@@ -113,18 +116,6 @@ void mp3_play_music(uint8_t no)
 	flush_whole_package();
 }
 
-void mp3_play_mode_set(uint8_t mode)
-{
-	// mode 0: play only once; mode 1: play repeatly. mode 2: play cycle.
-	if((mode != 0)&& (mode != 1)&&(mode != 2))
-	{
-		return;
-	}
-	init_package();
-	add_next_byte(PLAY_MODE_SET_CMD);
-	add_next_byte(mode);
-	flush_whole_package();
-}
 
 void mp3_delete_music(uint8_t no)
 {
@@ -134,19 +125,68 @@ void mp3_delete_music(uint8_t no)
 	add_next_byte(no);
 	flush_whole_package();
 }
+uint8_t mp3_get_current_volume(void)
+{
+    return s_current_volume;
+}
 
 void mp3_set_volume(uint8_t volume)
 {
+    if(volume > 31) // volume range 0-31.
+	{
+        volume = 31 ;
+	}
+    s_current_volume = volume;
+    
 	init_package();
 	add_next_byte(VOLUME_CMD);
 	add_next_byte(volume);
 	flush_whole_package();
 }
 
+void mp3_set_play_mode(enum PLAY_MODE mode)
+{
+    uint8_t play_mode;
+    init_package();
+    add_next_byte(PLAY_MODE_CMD);
+    switch(mode)
+    {
+        case SINGLE_PLAY:
+            play_mode = 0x00;
+        break;
+        case SINGLE_CYCLE_PLAY:
+            play_mode = 0x01;
+        break;
+        case ALL_CYCLE_PLAY:
+            play_mode = 0x02;
+        break;
+        case RAND_PLAY:
+            play_mode = 0x03;
+        break;
+        default:
+        break;
+    }
+    add_next_byte(play_mode);
+    flush_whole_package();
+}
+
 void mp3_init(void)
 {   
 	pinMode(FUNCTION_KEY_1, GPIO_MODE_INPUT);
 	pinMode(FUNCTION_KEY_2, GPIO_MODE_INPUT);
-	SoftwareSerialBegin(P0_0, 9600);
+    pinMode(FUNCTION_KEY_3, GPIO_MODE_INPUT);
+	pinMode(FUNCTION_KEY_4, GPIO_MODE_INPUT);
+    pinMode(MOTOR_CTL_PIN,  GPIO_MODE_OUTPUT);
+//    pinMode(KEY1_LED_PIN, GPIO_MODE_OUTPUT);
+//    pinMode(KEY1_LED_PIN, GPIO_MODE_OUTPUT);
+//    pinMode(KEY1_LED_PIN, GPIO_MODE_OUTPUT);
+//    pinMode(KEY1_LED_PIN, GPIO_MODE_OUTPUT);
+//    digitalWrite(KEY1_LED_PIN, 1);
+//    digitalWrite(KEY2_LED_PIN, 1);
+//    digitalWrite(KEY3_LED_PIN, 1);
+//    digitalWrite(KEY4_LED_PIN, 1);
+	SoftwareSerialBegin(TX_PIN, 9600);
 	config_store_with_SD_card();
+    delay(100);
+    mp3_set_volume(20);
 }

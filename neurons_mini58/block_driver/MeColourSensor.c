@@ -365,7 +365,12 @@ struct colour_sensor_data colour_sensor_read(void)
 	temp_b = b_value*255/c_value;
 	
 	ret_data.r_value = gammatable[temp_r];
-	ret_data.g_value = gammatable[temp_g] - 6;
+	ret_data.g_value = gammatable[temp_g];
+    // calibaration.
+    if(ret_data.g_value > 6) 
+    {
+        ret_data.g_value -= 6;
+    }
 	ret_data.b_value = gammatable[temp_b];
 	//DEBUG_MSG(UART0, "r_value:%d, g_value:%d, b_value:%d, c_value:%d\n", ret_data.r_value, ret_data.g_value, ret_data.b_value, c_value);
 	return ret_data;
@@ -382,11 +387,9 @@ void colour_sensor_init(void)
 		gammatable[i] = x;
     }
     I2C_Init(I2C0);
-	TCS34725_setIntegrationTime(TCS34725_INTEGRATIONTIME_24MS);
+	TCS34725_setIntegrationTime(TCS34725_INTEGRATIONTIME_154MS);
 	TCS34725_setGain(TCS34725_GAIN_4X);
 
 	/* Note: by default, the device is in power down mode on bootup */
 	TCS34725_enable();
-	
-	pwm_write(P0_4, 1000, 2);
 }
